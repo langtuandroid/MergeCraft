@@ -1,15 +1,16 @@
-using UnityEngine;
+ using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D))]
 public class MergeBlock : MonoBehaviour
 {
+    public int BlockLevel => _blockLevel;
     public bool MergeActivated => _mergeActivated;
 
-    [SerializeField] private GameObject _mergedBlock;
+    [SerializeField] private BoxCollider2D _triggerCollider;
+    [SerializeField] private RewardChest _chest;
+    [SerializeField] private MergeBlock _mergedBlock;
     [SerializeField] private int _blockLevel;
 
     private bool _mergeActivated;
-    private BoxCollider2D _collider;
     private float _passedMergeTime = 0.05f;
     private readonly float _mergeDuration = 0.05f;
 
@@ -31,10 +32,13 @@ public class MergeBlock : MonoBehaviour
 
     public void CreateMergedBlock(GameObject touchedBlock)
     {
-        GameObject mergedBlock = Instantiate(_mergedBlock, transform.position, Quaternion.identity);
+        MergeBlock mergedBlock = Instantiate(_mergedBlock, transform.position, Quaternion.identity);
+
         Cell cell = transform.parent.GetComponent<Cell>();
-        cell.Occupie(mergedBlock.transform);
-        mergedBlock.transform.localScale = Vector3.one;
+        cell.Occupie(mergedBlock);
+
+        mergedBlock.GetComponent<RewardChest>().Initialize(_chest.Wallet);
+        mergedBlock.GetComponent<MergeBlockAnimator>().LaunchMergeBlockAnimation();
 
         Destroy(touchedBlock);
         Destroy(gameObject);
@@ -43,12 +47,14 @@ public class MergeBlock : MonoBehaviour
     private void SetMergeActive(bool mergeActive)
     {
         _mergeActivated = mergeActive;
-        _collider.enabled = mergeActive;
+        _triggerCollider.enabled = mergeActive;
     }
 
-    private void Awake()
+    private void OnValidate()
     {
-        _collider = GetComponent<BoxCollider2D>();
-        DeactivateMerge();
+        if (_triggerCollider.isTrigger == false)
+            _triggerCollider = null;
     }
+
+    private void Awake() => DeactivateMerge();
 }

@@ -1,12 +1,21 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Wallet : MonoBehaviour
 {
-    private int _money;
+    public event UnityAction<float> MoneyCountChanged;
 
-    public void TryAddMoney(int money)
+    private float _money;
+    private int _buildBlocks;
+
+    public void TryAddReward(float moneyCount, int buildBlockCount)
     {
-        if (money > 0)
-            _money += money;
+        if (moneyCount > 0 && buildBlockCount > 0)
+        {
+            _money += moneyCount;
+            _buildBlocks += buildBlockCount;
+
+            MoneyCountChanged?.Invoke(_money);
+        }
     }
 }

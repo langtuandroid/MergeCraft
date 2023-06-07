@@ -4,14 +4,31 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Cell))]
 public class CellPresenter : MonoBehaviour, IDropHandler
 {
-    private Cell _cell;
+    [SerializeField] private Cell _cell;
 
     public void OnDrop(PointerEventData eventData)
     {
-        Transform blockTransform = eventData.pointerDrag.transform;
-        _cell.Occupie(blockTransform);
-        blockTransform.localScale = Vector3.one;
+        eventData.pointerDrag.TryGetComponent<MergeBlock>(out MergeBlock mergeBlock);
+
+        if (_cell.BlockInCell != null)
+        {
+            MergeBlockAnimator mergeBlockAnimator = _cell.BlockInCell.GetComponent<MergeBlockAnimator>();
+
+            if (mergeBlock.BlockLevel == _cell.BlockInCell.BlockLevel && mergeBlockAnimator.AnimationPlaying == false)
+            {
+                Occupie(mergeBlock);
+            }
+        }
+        else
+        {
+            Occupie(mergeBlock);
+        }
     }
 
-    private void Awake() => _cell = GetComponent<Cell>();
+    private void Occupie(MergeBlock mergeBlock)
+    {
+        _cell.Occupie(mergeBlock);
+        mergeBlock.transform.localScale = Vector3.one;
+        mergeBlock.ActivateMerge();
+    }
 }

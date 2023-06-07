@@ -4,7 +4,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class Cell : MonoBehaviour
 {
-    public bool Occupied => _cellImage.transform.childCount > 0;
+    public MergeBlock BlockInCell => _blockInCell;
     public bool Blocked => _blocked;
 
     [SerializeField] private bool _blocked;
@@ -12,14 +12,19 @@ public class Cell : MonoBehaviour
     [SerializeField] private Sprite _unblockedSprite;
 
     private Image _cellImage;
+    private MergeBlock _blockInCell;
 
-    public void Block() => SetBlockActive(true, _blockedSprite);
     public void Unblock() => SetBlockActive(false, _unblockedSprite);
 
-    public void Occupie(Transform block)
+    public void Occupie(MergeBlock block)
     {
-        block.parent = _cellImage.transform;
-        block.localPosition = Vector3.zero;
+        if (block.transform.parent != null)
+            if (block.transform.parent.TryGetComponent<Cell>(out Cell previouslyCell))
+                previouslyCell.ResetCell();
+
+        block.transform.parent = _cellImage.transform;
+        block.transform.localPosition = Vector3.zero;
+        _blockInCell = block;
     }
 
     private void SetBlockActive(bool blockActive, Sprite cellSprite)
@@ -28,5 +33,12 @@ public class Cell : MonoBehaviour
         _blocked = blockActive;
     }
 
+    private void OnValidate()
+    {
+        if (_blocked)
+            SetBlockActive(true, _blockedSprite);
+    }
+
+    private void ResetCell() => _blockInCell = null;
     private void Awake() => _cellImage = GetComponent<Image>();
 }

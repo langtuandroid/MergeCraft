@@ -4,11 +4,12 @@ using UnityEngine.UI;
 
 public class BlockCreator : MonoBehaviour
 {
-    [SerializeField] private Cell[] _cells;
-    [SerializeField] private MergeBlock[] _blocks;
-    [SerializeField] private Slider _creationProgressSlider;
+    [SerializeField] private Image _creationProgressImage;
+    [SerializeField] private Wallet _wallet;
     [Space(10), SerializeField] private float _creationDuration;
     [SerializeField] private int _creationBlockLevel;
+    [Space(10), SerializeField] private Cell[] _cells;
+    [SerializeField] private MergeBlock[] _blocks;
 
     private List<Cell> _emptyCells = new List<Cell>();
     private float _passedTime;
@@ -18,30 +19,35 @@ public class BlockCreator : MonoBehaviour
     {
         for (int i = 0; i < _cells.Length; i++)
         {
-            if (_cells[i].Blocked == false && _cells[i].Occupied == false && _emptyCells.Contains(_cells[i]) == false)
+            if (_cells[i].Blocked == false && _cells[i].BlockInCell == null && _emptyCells.Contains(_cells[i]) == false)
                 _emptyCells.Add(_cells[i]);
         }
     }
     
     private void TryCreateBlock()
     {
+        InitializeEmptyCells();
+
         if (_emptyCells.Count > 0)
         {
+            _emptyCells.Clear();
+            InitializeEmptyCells();
+
             if (_canCreate == true)
             {
                 _canCreate = false;
                 int emptyCellNumber = Random.Range(0, _emptyCells.Count);
 
                 MergeBlock block = Instantiate(_blocks[_creationBlockLevel], _emptyCells[emptyCellNumber].transform.position, Quaternion.identity);
-                _emptyCells[emptyCellNumber].Occupie(block.transform);
+                _emptyCells[emptyCellNumber].Occupie(block);
                 _emptyCells.Clear();
 
-                MergeBlockAnimator mergeBlockAnimator = block.GetComponent<MergeBlockAnimator>();
-                mergeBlockAnimator.LaunchCreateBlockAnimation(_creationDuration);
+                block.GetComponent<RewardChest>().Initialize(_wallet);
+                block.GetComponent<MergeBlockAnimator>().LaunchCreateBlockAnimation(_creationDuration);
             }
 
             _passedTime += Time.deltaTime;
-            _creationProgressSlider.value = _passedTime;
+            _creationProgressImage.fillAmount = _passedTime / _creationDuration;
 
             if (_passedTime >= _creationDuration)
             {
@@ -51,17 +57,7 @@ public class BlockCreator : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        InitializeEmptyCells();
-        TryCreateBlock();
-    }
-
-    private void Awake()
-    {
-        _creationProgressSlider.maxValue = _creationDuration;
-        _creationProgressSlider.minValue = 0;
-        _passedTime = _creationDuration;
-    }
+    private void Update() => TryCreateBlock();
+    private void Awake() => _passedTime = _creationDuration;
 }
 
