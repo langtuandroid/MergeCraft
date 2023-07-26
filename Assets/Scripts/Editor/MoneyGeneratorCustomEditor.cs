@@ -6,7 +6,7 @@ using UnityEngine;
 [CustomEditor(typeof(MoneyGenerator))]
 public class MoneyGeneratorCustomEditor : Editor
 {
-    private List<float> _blockLevelMoney = new List<float>();
+    private List<double> _blockLevelMoney = new List<double>();
     private Vector2 _scroll;
 
     public override void OnInspectorGUI()

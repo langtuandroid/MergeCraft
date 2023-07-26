@@ -9,11 +9,14 @@ public class LibraryBlockSwitcher : MonoBehaviour
     [Space(10), SerializeField] private Image _blockImage;
     [SerializeField] private Button _nextBlockButton;
     [SerializeField] private Button _previouslyBlockButton;
-    [Space(10), SerializeField] private MergeBlock[] _mergeBlocks;
+    [Space(10), SerializeField] private Sprite[] _mergeBlockSprites;
+    [Space(10), SerializeField] private string[] _russianMergeBlockNames;
+    [SerializeField] private string[] _englishMergeBlockNames;
 
     private int _displayedBlockNumber;
+    private readonly int _firstBlockNumber = 0;
 
-    private bool CanDeactivateNextBlockButton => _displayedBlockNumber + 1 > _mergeBlocks.Length - 1;
+    private bool CanDeactivateNextBlockButton => _displayedBlockNumber + 1 > _mergeBlockSprites.Length - 1;
     private bool CanDeactivatePreviouslyBlockButton => _displayedBlockNumber - 1 < 0;
 
     public void SwitchToNextBlock() => SwitchTo(_displayedBlockNumber + 1);
@@ -24,8 +27,9 @@ public class LibraryBlockSwitcher : MonoBehaviour
     private void SwitchTo(int switchNumber)
     {
         _displayedBlockNumber = switchNumber;
-        _blockNumberText.text = switchNumber.ToString();
-        _blockImage.sprite = _mergeBlocks[switchNumber].GetComponent<Image>().sprite;
+        _blockNumberText.text = (switchNumber + 1).ToString();
+        _blockImage.sprite = _mergeBlockSprites[switchNumber];
+        _blockNameText.text = _englishMergeBlockNames[switchNumber];
 
         TryDeactivatePreviouslyBlockButton();
         TryDeactivateNextBlockButton();
@@ -41,7 +45,7 @@ public class LibraryBlockSwitcher : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_mergeBlocks.Length >= 1)
-            SwitchTo(0);
+        if (_mergeBlockSprites.Length >= 1)
+            SwitchTo(_firstBlockNumber);
     }
 }

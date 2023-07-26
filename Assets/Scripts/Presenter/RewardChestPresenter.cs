@@ -8,15 +8,16 @@ public class RewardChestPresenter : MonoBehaviour
     [SerializeField] private RewardAnimator _rewardAnimator;
     [SerializeField] private RewardShower _rewardShower;
     [SerializeField] private Button _chestOpeningButton;
-    [SerializeField] private ParticleSystem _openingParticleEffect;
 
     private void OnChestOpened()
     {
-        //_openingParticleEffect.Play();
-        _rewardShower.Show(_chest.MoneyReward);
-        _rewardChestAnimator.LaunchOpenChestAnimation();
-        _rewardAnimator.LaunchGettingRewardAnimation();
-        _chest.Open();
+        if (_chest.RewardApplied == false)
+        {
+            _rewardShower.ShowBuildBlockCount(_chest.BuildBlockReward);
+            _rewardChestAnimator.LaunchOpenChestAnimation();
+            _rewardAnimator.LaunchGettingBlockRewardAnimation();
+            _chest.TryApplyReward();
+        }
     }
 
     private void OnEnable() => _chestOpeningButton.onClick.AddListener(() => OnChestOpened());

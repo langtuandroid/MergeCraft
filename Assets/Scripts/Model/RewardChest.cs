@@ -3,16 +3,24 @@ using UnityEngine;
 public class RewardChest : MonoBehaviour
 {
     public Wallet Wallet => _wallet;
-    public int MoneyReward => _moneyReward;
     public int BuildBlockReward => _buildBlockReward;
+    public bool RewardApplied => _rewardApplied;
 
-    [SerializeField] private int _moneyReward;
-    [SerializeField] private int _buildBlockReward;
+    private readonly int _buildBlockReward = 5;
 
     private Wallet _wallet;
+    private bool _rewardApplied;
 
     public void Initialize(Wallet wallet) => _wallet = wallet;
-    public void Open() => _wallet.TryAddReward(_moneyReward, _buildBlockReward);
+
+    public void TryApplyReward()
+    {
+        if (_rewardApplied == false)
+        {
+            _wallet.TryAddBuildBlocks(_buildBlockReward);
+            _rewardApplied = true;
+        }
+    }
 }
 
 

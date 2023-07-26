@@ -15,9 +15,7 @@ public class CellPresenter : MonoBehaviour, IDropHandler
             MergeBlockAnimator mergeBlockAnimator = _cell.BlockInCell.GetComponent<MergeBlockAnimator>();
 
             if (mergeBlock.BlockLevel == _cell.BlockInCell.BlockLevel && mergeBlockAnimator.AnimationPlaying == false)
-            {
                 Occupie(mergeBlock);
-            }
         }
         else
         {

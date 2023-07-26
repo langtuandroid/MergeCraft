@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class WalletPresenter : MonoBehaviour
 {
-    [SerializeField] private Wallet _wallet;
-    [SerializeField] private RewardShower _moneyShower;
+    [SerializeField] private WalletContentShower _walletContentShower;
 
-    private void OnMoneyCountChanged(float money) => _moneyShower.Show(money);
-    private void OnEnable() => _wallet.MoneyCountChanged += OnMoneyCountChanged;
+    private Wallet _wallet;
+
+    public void Initialize(Wallet wallet)
+    {
+        _wallet = wallet;
+        _wallet.MoneyCountChanged += OnMoneyCountChanged;
+    }
+
+    private void OnMoneyCountChanged(double money) => _walletContentShower.ShowMoneyCount(money);
     private void OnDisable() => _wallet.MoneyCountChanged -= OnMoneyCountChanged;
 }

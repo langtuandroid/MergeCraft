@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MergeListener : MonoBehaviour
+public class MergeListener : MonoBehaviour, IActivatable
 {
     [SerializeField] private Collider2D _collisionCollider;
 
