@@ -414,6 +414,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca4e29e0cd3ad44d98900d1859e0a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mergeBlockAnimator: {fileID: 604263977084764031}
+  _rewardAnimator: {fileID: -7667434724103973227}
+  _rewardShower: {fileID: 1689242866521972626}
+  _rewardChest: {fileID: 4749621656435028088}
   _triggerCollider: {fileID: 4180801533623792715}
   _chest: {fileID: 4749621656435028088}
   _mergedBlock: {fileID: 4180801533623792718, guid: 71387f11e451832488e49a63c6a3d2b0, type: 3}

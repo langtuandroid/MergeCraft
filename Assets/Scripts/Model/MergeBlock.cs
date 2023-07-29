@@ -4,7 +4,15 @@ public class MergeBlock : MonoBehaviour
 {
     public int BlockLevel => _blockLevel;
     public bool MergeActivated => _mergeActivated;
+    public RewardChest RewardChest => _rewardChest;
+    public MergeBlockAnimator MergeBlockAnimator => _mergeBlockAnimator;
+    public RewardAnimator RewardAnimator => _rewardAnimator;
+    public RewardShower RewardShower => _rewardShower;
 
+    [SerializeField] private MergeBlockAnimator _mergeBlockAnimator;
+    [SerializeField] private RewardAnimator _rewardAnimator;
+    [SerializeField] private RewardShower _rewardShower;
+    [SerializeField] private RewardChest _rewardChest;
     [SerializeField] private BoxCollider2D _triggerCollider;
     [SerializeField] private RewardChest _chest;
     [SerializeField] private MergeBlock _mergedBlock;
@@ -37,8 +45,8 @@ public class MergeBlock : MonoBehaviour
         Cell cell = transform.parent.GetComponent<Cell>();
         cell.Occupie(mergedBlock);
 
-        mergedBlock.GetComponent<RewardChest>().Initialize(_chest.Wallet);
-        mergedBlock.GetComponent<MergeBlockAnimator>().LaunchMergeBlockAnimation();
+        mergedBlock.RewardChest.Initialize(_chest.Wallet);
+        mergedBlock.MergeBlockAnimator.LaunchMergeBlockAnimation();
 
         Destroy(touchedBlock);
         Destroy(gameObject);

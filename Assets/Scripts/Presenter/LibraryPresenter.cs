@@ -12,17 +12,9 @@ public class LibraryPresenter : MonoBehaviour
 
     private void OnNextBlockButtonClicked() => _libraryBlockSwitcher.SwitchToNextBlock();
     private void OnPreviouslyBlockButtonClicked() => _libraryBlockSwitcher.SwitchToPreviouslyBlock();
-
-    private void OnCloseLibraryButtonClicked()
-    {
-        _libraryPanel.SetActive(false);
-    }
-
-    private void OnOpenLibraryButtonClicked()
-    {
-        _libraryPanel.SetActive(true);
-    }
-
+    private void OnCloseLibraryButtonClicked() => _libraryPanel.SetActive(false);
+    private void OnOpenLibraryButtonClicked() => _libraryPanel.SetActive(true);
+ 
     private void OnEnable()
     {
         _nextBlockButton.onClick.AddListener(() => OnNextBlockButtonClicked());

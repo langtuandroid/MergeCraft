@@ -14,7 +14,9 @@ public class BlockDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, I
 
     public void ActivateDrag() => _blockImage.raycastTarget = true;
     public void DeactivateDrag() => _blockImage.raycastTarget = false;
-    public void OnDrag(PointerEventData eventData) => _rectTransform.anchoredPosition += eventData.delta / _rectTransform.parent.transform.localScale.x;
+
+    public void OnDrag(PointerEventData eventData) => 
+        _rectTransform.anchoredPosition += eventData.delta / _rectTransform.parent.transform.localScale.x;
 
     public void OnBeginDrag(PointerEventData eventData)
     {

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class MoneyGenerator : MonoBehaviour, IActivatable
 {
+    public bool GeneratorActivated => _generatorActivated;
+
     [SerializeField] private int _raiseValue;
     [Space(10), SerializeField] private float _moneyGenerationDelay;
     [SerializeField] private float _moneyMultiplier;
@@ -18,7 +20,18 @@ public class MoneyGenerator : MonoBehaviour, IActivatable
     public void Initialize(Wallet wallet) => _wallet = wallet;
     public void IncreaseMultiplier() => _moneyMultiplier += _multiplierIncreaseStep;
 
-    public void GenerateMoney()
+    public void TryLaunchGeneration()
+    {
+        _passedTime += Time.deltaTime;
+
+        if (_passedTime >= _moneyGenerationDelay)
+        {
+            TryGenerateMoney();
+            _passedTime = 0;
+        }
+    }
+
+    private void TryGenerateMoney()
     {
         _generatedMoney = 0;
 
@@ -26,13 +39,13 @@ public class MoneyGenerator : MonoBehaviour, IActivatable
         {
             if (_cells[i].BlockInCell != null)
             {
-                if (_cells[i].BlockInCell.GetComponent<MergeBlockAnimator>().AnimationPlaying == false)
+                if (_cells[i].BlockInCell.MergeBlockAnimator.AnimationPlaying == false)
                 {
                     double moneyForBlock = (Mathf.Pow(_raiseValue, _cells[i].BlockInCell.BlockLevel));
                     _generatedMoney += moneyForBlock;
 
-                    _cells[i].BlockInCell.gameObject.GetComponent<RewardShower>().ShowMoneyCount(moneyForBlock);
-                    _cells[i].BlockInCell.gameObject.GetComponent<RewardAnimator>().LaunchGettingMoneyRewardAnimation();
+                    _cells[i].BlockInCell.RewardShower.ShowMoneyCount(moneyForBlock);
+                    _cells[i].BlockInCell.RewardAnimator.LaunchGettingMoneyRewardAnimation();
                 }
             }
         }
@@ -51,18 +64,4 @@ public class MoneyGenerator : MonoBehaviour, IActivatable
         return blocksLevelMoney;
     }
 #endif
-
-    private void Update()
-    {
-        if (_generatorActivated == true)
-        {
-            _passedTime += Time.deltaTime;
-
-            if (_passedTime >= _moneyGenerationDelay)
-            {
-                GenerateMoney();
-                _passedTime = 0;
-            }
-        }
-    }
 }

@@ -12,7 +12,7 @@ public class CellPresenter : MonoBehaviour, IDropHandler
 
         if (_cell.BlockInCell != null)
         {
-            MergeBlockAnimator mergeBlockAnimator = _cell.BlockInCell.GetComponent<MergeBlockAnimator>();
+            MergeBlockAnimator mergeBlockAnimator = _cell.BlockInCell.MergeBlockAnimator;
 
             if (mergeBlock.BlockLevel == _cell.BlockInCell.BlockLevel && mergeBlockAnimator.AnimationPlaying == false)
                 Occupie(mergeBlock);

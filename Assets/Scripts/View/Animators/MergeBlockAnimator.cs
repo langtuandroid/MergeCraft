@@ -35,6 +35,5 @@ public class MergeBlockAnimator : MonoBehaviour
     }
 
     private void Awake() => _mergeBlockImage = GetComponent<Image>();
-
     private void OnDestroy() => _increaseScaleSequence.Kill(true);
 }

@@ -23,9 +23,15 @@ public class MergeBlockPresenter : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<MergeBlock>(out MergeBlock mergeBlock))
+        {
             if (_mergeBlock.BlockLevel == mergeBlock.BlockLevel)
+            {
                 if (_mergeBlock.MergeActivated)
+                {
                     _mergeBlock.CreateMergedBlock(mergeBlock.gameObject);
+                }
+            }
+        }   
     }
 
     private void Update()

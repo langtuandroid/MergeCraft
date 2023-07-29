@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class BlockCreator : MonoBehaviour, IActivatable
 {
-    [SerializeField] private Image _creationProgressImage;
-    [Space(10), SerializeField] private float _creationDuration;
+    public event UnityAction<float> CreationProgressChanged;
+    public bool CreatorActivated => _creatorActivated;
+
+    [SerializeField] private float _creationDuration;
     [SerializeField] private int _creationBlockLevel;
     [Space(10), SerializeField] private Cell[] _cells;
     [SerializeField] private MergeBlock[] _blocks;
@@ -19,16 +21,7 @@ public class BlockCreator : MonoBehaviour, IActivatable
     public void Initialize(Wallet wallet) => _wallet = wallet;
     public void Activate() => _creatorActivated = true;
 
-    private void InitializeEmptyCells()
-    {
-        for (int i = 0; i < _cells.Length; i++)
-        {
-            if (_cells[i].Blocked == false && _cells[i].BlockInCell == null && _emptyCells.Contains(_cells[i]) == false)
-                _emptyCells.Add(_cells[i]);
-        }
-    }
-
-    private void TryCreateBlock()
+    public void TryCreateBlock()
     {
         InitializeEmptyCells();
 
@@ -41,13 +34,9 @@ public class BlockCreator : MonoBehaviour, IActivatable
                 CreateBlock();
 
             _passedTime += Time.deltaTime;
-            _creationProgressImage.fillAmount = _passedTime / _creationDuration;
+            CreationProgressChanged?.Invoke(_passedTime / _creationDuration);
 
-            if (_passedTime >= _creationDuration)
-            {
-                _canCreate = true;
-                _passedTime = 0;
-            }
+            TryResetPassedTime();
         }
     }
 
@@ -60,14 +49,26 @@ public class BlockCreator : MonoBehaviour, IActivatable
         _emptyCells[emptyCellNumber].Occupie(block);
         _emptyCells.Clear();
 
-        block.GetComponent<RewardChest>().Initialize(_wallet);
-        block.GetComponent<MergeBlockAnimator>().LaunchCreateBlockAnimation(_creationDuration);
+        block.RewardChest.Initialize(_wallet);
+        block.MergeBlockAnimator.LaunchCreateBlockAnimation(_creationDuration);
     }
 
-    private void Update()
+    private void InitializeEmptyCells()
     {
-        if (_creatorActivated == true)
-            TryCreateBlock();
+        for (int i = 0; i < _cells.Length; i++)
+        {
+            if (_cells[i].Blocked == false && _cells[i].BlockInCell == null && _emptyCells.Contains(_cells[i]) == false)
+                _emptyCells.Add(_cells[i]);
+        }
+    }
+
+    private void TryResetPassedTime()
+    {
+        if (_passedTime >= _creationDuration)
+        {
+            _canCreate = true;
+            _passedTime = 0;
+        }
     }
 
     private void Awake() => _passedTime = _creationDuration;

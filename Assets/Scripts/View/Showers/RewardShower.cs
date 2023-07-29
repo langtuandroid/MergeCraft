@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class RewardShower : MonoBehaviour, IShower
+public class RewardShower : MonoBehaviour, ICurrencyShower
 {
     [SerializeField] private TMP_Text _moneyRewardShower;
     [SerializeField] private TMP_Text _blockRewardShower;

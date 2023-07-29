@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class WalletContentShower : MonoBehaviour, IShower
+public class WalletContentShower : MonoBehaviour, ICurrencyShower
 {
     [SerializeField] private TMP_Text _moneyShower;
     [SerializeField] private TMP_Text _buildBlockShower;
