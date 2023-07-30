@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HudAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 679a831b2eb747b4dafc438691cfd6d5, type: 3}
+    - {fileID: 2800000, guid: 6a7c65367d0c6304597eefd2eae144c6, type: 3}
+    - {fileID: 2800000, guid: 840e15edd393ec642bc61df914e8f7fa, type: 3}
+    - {fileID: 2800000, guid: 2b07b338ca91f0a459e4c4eb13fc0e42, type: 3}
+    - {fileID: 2800000, guid: 29b6118fc782533479f6fbad2a36c893, type: 3}
+    - {fileID: 2800000, guid: bfa16e2b923e4434aa9bde30c0e31b18, type: 3}
+    - {fileID: 2800000, guid: 4490a4abc9ae9a0469604e77ebb2cf97, type: 3}
+    - {fileID: 2800000, guid: 95717bdf76d26434a94ad76b515e6d5c, type: 3}
+    - {fileID: 2800000, guid: 6869d4f2e5c322647a408548f5c6a5be, type: 3}
+    - {fileID: 2800000, guid: 3bc80e8773140bf4bbc2aba5f1c96d3e, type: 3}
+    - {fileID: 2800000, guid: 72cce8cd0cb78574b984ee9f1a25583a, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 6869d4f2e5c322647a408548f5c6a5be, type: 3}
+  - {fileID: 21300000, guid: 6a7c65367d0c6304597eefd2eae144c6, type: 3}
+  - {fileID: 21300000, guid: 3bc80e8773140bf4bbc2aba5f1c96d3e, type: 3}
+  - {fileID: 21300000, guid: 2b07b338ca91f0a459e4c4eb13fc0e42, type: 3}
+  - {fileID: 21300000, guid: 679a831b2eb747b4dafc438691cfd6d5, type: 3}
+  - {fileID: 21300000, guid: bfa16e2b923e4434aa9bde30c0e31b18, type: 3}
+  - {fileID: 21300000, guid: 4490a4abc9ae9a0469604e77ebb2cf97, type: 3}
+  - {fileID: 21300000, guid: 72cce8cd0cb78574b984ee9f1a25583a, type: 3}
+  - {fileID: 21300000, guid: 840e15edd393ec642bc61df914e8f7fa, type: 3}
+  - {fileID: 21300000, guid: 29b6118fc782533479f6fbad2a36c893, type: 3}
+  - {fileID: 21300000, guid: 95717bdf76d26434a94ad76b515e6d5c, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Settings_icon
+  - ChestGold
+  - ProgressBarBackground
+  - frame2
+  - BuildBlock
+  - Upgrade_icon 1
+  - Liberary_icon 1
+  - ProgressBar
+  - Coins
+  - Build_icon 1
+  - Clock_icon
+  m_RenderDataMap: {}
+  m_Tag: HudAtlas
+  m_IsVariant: 0

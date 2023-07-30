@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BlockAtlas2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 33ae2b405f0030a41a8f6aa9a8cdb60f, type: 3}
+    - {fileID: 2800000, guid: 2cdf476298b8fc94496da535e9ec7a19, type: 3}
+    - {fileID: 2800000, guid: 464c1432ddadf8e41b27d4d740f1890d, type: 3}
+    - {fileID: 2800000, guid: b54ae373996fad24591679cefb396d6f, type: 3}
+    - {fileID: 2800000, guid: b0d03c72a8d954e4a9bad5ce45c720c2, type: 3}
+    - {fileID: 2800000, guid: c899a706b9e04c842ae51b7180dc019f, type: 3}
+    - {fileID: 2800000, guid: 29ba20736cdc78d4a97b3723bca36644, type: 3}
+    - {fileID: 2800000, guid: 1965eb57cad237144a531645fa769a12, type: 3}
+    - {fileID: 2800000, guid: 42349e9b2a179824f8d108659143f3f6, type: 3}
+    - {fileID: 2800000, guid: 657ca4102750f9c4b85da3fc97792998, type: 3}
+    - {fileID: 2800000, guid: 5caf1d2506d69974a8a6ad7aa7236d6a, type: 3}
+    - {fileID: 2800000, guid: 82ec72aa71a34cd4d9c4592c0236de6d, type: 3}
+    - {fileID: 2800000, guid: 63fde07220cae4a419f8436b482bf468, type: 3}
+    - {fileID: 2800000, guid: 4dbe5800e1752d547bdd182181d70e0c, type: 3}
+    - {fileID: 2800000, guid: 762fb602ef8156f43ac76db286d15e15, type: 3}
+    - {fileID: 2800000, guid: 28c78bf9e678daf418455afa87e503dd, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 4dbe5800e1752d547bdd182181d70e0c, type: 3}
+  - {fileID: 21300000, guid: 657ca4102750f9c4b85da3fc97792998, type: 3}
+  - {fileID: 21300000, guid: 33ae2b405f0030a41a8f6aa9a8cdb60f, type: 3}
+  - {fileID: 21300000, guid: 762fb602ef8156f43ac76db286d15e15, type: 3}
+  - {fileID: 21300000, guid: 464c1432ddadf8e41b27d4d740f1890d, type: 3}
+  - {fileID: 21300000, guid: 2cdf476298b8fc94496da535e9ec7a19, type: 3}
+  - {fileID: 21300000, guid: 63fde07220cae4a419f8436b482bf468, type: 3}
+  - {fileID: 21300000, guid: b0d03c72a8d954e4a9bad5ce45c720c2, type: 3}
+  - {fileID: 21300000, guid: 29ba20736cdc78d4a97b3723bca36644, type: 3}
+  - {fileID: 21300000, guid: b54ae373996fad24591679cefb396d6f, type: 3}
+  - {fileID: 21300000, guid: 5caf1d2506d69974a8a6ad7aa7236d6a, type: 3}
+  - {fileID: 21300000, guid: c899a706b9e04c842ae51b7180dc019f, type: 3}
+  - {fileID: 21300000, guid: 1965eb57cad237144a531645fa769a12, type: 3}
+  - {fileID: 21300000, guid: 28c78bf9e678daf418455afa87e503dd, type: 3}
+  - {fileID: 21300000, guid: 82ec72aa71a34cd4d9c4592c0236de6d, type: 3}
+  - {fileID: 21300000, guid: 42349e9b2a179824f8d108659143f3f6, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 30RedstoneBlock
+  - 26DriedKelp
+  - 17IronBlock
+  - 31LampActive
+  - 19BirchPlanks
+  - 18BirchLog
+  - 29RedstoneOre
+  - 21StoneBricks
+  - 23Bricks
+  - 20ChiseledStoneBricks
+  - 27PrismarineBricks
+  - 22MossyStoneBricks
+  - 24GoldOre
+  - 32Melon
+  - 28SeaLantern
+  - 25GoldBlock
+  m_RenderDataMap: {}
+  m_Tag: BlockAtlas2
+  m_IsVariant: 0

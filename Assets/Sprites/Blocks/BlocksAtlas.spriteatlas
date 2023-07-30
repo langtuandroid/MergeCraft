@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BlocksAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 7cc2cd6696de17a45b42adf7e55cf8b2, type: 3}
+    - {fileID: 2800000, guid: ddeba1d42b4857540bfffd266ffe2e56, type: 3}
+    - {fileID: 2800000, guid: a99532c071e792148adb0eed40966009, type: 3}
+    - {fileID: 2800000, guid: c200f5293b2e5474c9334cb244b5340f, type: 3}
+    - {fileID: 2800000, guid: 351e5e2efddbcd046b91f384ca6b70c5, type: 3}
+    - {fileID: 2800000, guid: c510123eb57a72b498cb141c03580de6, type: 3}
+    - {fileID: 2800000, guid: a1cfd717b78c9f14792b5d406ac63e55, type: 3}
+    - {fileID: 2800000, guid: 4537fde1aac3e324e9ba7dfcd66879f0, type: 3}
+    - {fileID: 2800000, guid: 234cccd861e3710489f764fb5fb7a21b, type: 3}
+    - {fileID: 2800000, guid: a66c29fed9c128949bb26ee83b793867, type: 3}
+    - {fileID: 2800000, guid: eefc8ec99a1c00d45b1a21af1debd5be, type: 3}
+    - {fileID: 2800000, guid: 9a4584cd969f27c4599f5b81e8376292, type: 3}
+    - {fileID: 2800000, guid: d50f7d5161265af4aacf63ce5f2a7851, type: 3}
+    - {fileID: 2800000, guid: bd72aa9cd92326f49bb6487ef2db1fb8, type: 3}
+    - {fileID: 2800000, guid: 04971a410ce92094487e64adbc110539, type: 3}
+    - {fileID: 2800000, guid: 623652ed233c7fd479a44db32d1326c6, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: a99532c071e792148adb0eed40966009, type: 3}
+  - {fileID: 21300000, guid: 04971a410ce92094487e64adbc110539, type: 3}
+  - {fileID: 21300000, guid: d50f7d5161265af4aacf63ce5f2a7851, type: 3}
+  - {fileID: 21300000, guid: 4537fde1aac3e324e9ba7dfcd66879f0, type: 3}
+  - {fileID: 21300000, guid: ddeba1d42b4857540bfffd266ffe2e56, type: 3}
+  - {fileID: 21300000, guid: 7cc2cd6696de17a45b42adf7e55cf8b2, type: 3}
+  - {fileID: 21300000, guid: a1cfd717b78c9f14792b5d406ac63e55, type: 3}
+  - {fileID: 21300000, guid: 234cccd861e3710489f764fb5fb7a21b, type: 3}
+  - {fileID: 21300000, guid: c200f5293b2e5474c9334cb244b5340f, type: 3}
+  - {fileID: 21300000, guid: eefc8ec99a1c00d45b1a21af1debd5be, type: 3}
+  - {fileID: 21300000, guid: bd72aa9cd92326f49bb6487ef2db1fb8, type: 3}
+  - {fileID: 21300000, guid: 9a4584cd969f27c4599f5b81e8376292, type: 3}
+  - {fileID: 21300000, guid: 623652ed233c7fd479a44db32d1326c6, type: 3}
+  - {fileID: 21300000, guid: 351e5e2efddbcd046b91f384ca6b70c5, type: 3}
+  - {fileID: 21300000, guid: c510123eb57a72b498cb141c03580de6, type: 3}
+  - {fileID: 21300000, guid: a66c29fed9c128949bb26ee83b793867, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 3Cobblestone
+  - 15ChiseledRedSandstone
+  - 13FrostedIce
+  - 8CoalOre
+  - 2Hay
+  - 1Grass
+  - 7Bookshelf
+  - 9CoalBlock
+  - 4MossyCobblestone
+  - 11JackLantern
+  - 14ChiseledSandstone
+  - 12GrassSnow
+  - 16IronOre
+  - 5OakLog
+  - 6OakPlanks
+  - 10Pumpkin
+  m_RenderDataMap: {}
+  m_Tag: BlocksAtlas
+  m_IsVariant: 0
