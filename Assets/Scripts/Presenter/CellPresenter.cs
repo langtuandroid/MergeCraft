@@ -10,16 +10,19 @@ public class CellPresenter : MonoBehaviour, IDropHandler
     {
         eventData.pointerDrag.TryGetComponent<MergeBlock>(out MergeBlock mergeBlock);
 
-        if (_cell.BlockInCell != null)
+        if (mergeBlock.CanCreateMergedBlock)
         {
-            MergeBlockAnimator mergeBlockAnimator = _cell.BlockInCell.MergeBlockAnimator;
+            if (_cell.BlockInCell != null)
+            {
+                MergeBlockAnimator mergeBlockAnimator = _cell.BlockInCell.MergeBlockAnimator;
 
-            if (mergeBlock.BlockLevel == _cell.BlockInCell.BlockLevel && mergeBlockAnimator.AnimationPlaying == false)
+                if (mergeBlock.BlockLevel == _cell.BlockInCell.BlockLevel && mergeBlockAnimator.AnimationPlaying == false)
+                    Occupie(mergeBlock);
+            }
+            else
+            {
                 Occupie(mergeBlock);
-        }
-        else
-        {
-            Occupie(mergeBlock);
+            }
         }
     }
 

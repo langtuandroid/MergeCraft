@@ -2,12 +2,13 @@
 
 public class MergeBlock : MonoBehaviour
 {
-    public int BlockLevel => _blockLevel;
+    public bool CanCreateMergedBlock => _mergedBlock != null;
     public bool MergeActivated => _mergeActivated;
-    public RewardChest RewardChest => _rewardChest;
+    public int BlockLevel => _blockLevel;
     public MergeBlockAnimator MergeBlockAnimator => _mergeBlockAnimator;
     public RewardAnimator RewardAnimator => _rewardAnimator;
     public RewardShower RewardShower => _rewardShower;
+    public RewardChest RewardChest => _rewardChest;
 
     [SerializeField] private MergeBlockAnimator _mergeBlockAnimator;
     [SerializeField] private RewardAnimator _rewardAnimator;
@@ -38,18 +39,21 @@ public class MergeBlock : MonoBehaviour
             DeactivateMerge();
     }
 
-    public void CreateMergedBlock(GameObject touchedBlock)
+    public void TryCreateMergedBlock(GameObject touchedBlock)
     {
-        MergeBlock mergedBlock = Instantiate(_mergedBlock, transform.position, Quaternion.identity);
+        if (CanCreateMergedBlock)
+        {
+            MergeBlock mergedBlock = Instantiate(_mergedBlock, transform.position, Quaternion.identity);
 
-        Cell cell = transform.parent.GetComponent<Cell>();
-        cell.Occupie(mergedBlock);
+            Cell cell = transform.parent.GetComponent<Cell>();
+            cell.Occupie(mergedBlock);
 
-        mergedBlock.RewardChest.Initialize(_chest.Wallet);
-        mergedBlock.MergeBlockAnimator.LaunchMergeBlockAnimation();
+            mergedBlock.RewardChest.Initialize(_chest.Wallet);
+            mergedBlock.MergeBlockAnimator.LaunchMergeBlockAnimation();
 
-        Destroy(touchedBlock);
-        Destroy(gameObject);
+            Destroy(touchedBlock);
+            Destroy(gameObject);
+        }
     }
 
     private void SetMergeActive(bool mergeActive)

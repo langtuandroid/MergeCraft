@@ -24,6 +24,7 @@ public class Cell : MonoBehaviour
 
         block.transform.parent = _cellImage.transform;
         block.transform.localPosition = Vector3.zero;
+
         _blockInCell = block;
     }
 

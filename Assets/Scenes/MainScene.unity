@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774921dd7109ee144aa62557f469c4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _factoriesPrefabs: {fileID: 1174364155}
+  _assetProvider: {fileID: 1174364155}
 --- !u!4 &1174364154
 Transform:
   m_ObjectHideFlags: 0

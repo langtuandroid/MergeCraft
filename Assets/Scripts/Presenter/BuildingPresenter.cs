@@ -4,45 +4,84 @@ using UnityEngine.UI;
 public class BuildingPresenter : MonoBehaviour
 {
     [SerializeField] private BuildingCreator _buildingCreator;
+    [SerializeField] private BuildProgressShower _buildProgressShower;
+    [SerializeField] private ParticleSystem _confettiParticle;
     [SerializeField] private Button _buildBlockButton;
     [SerializeField] private Button _openBuildMenuButton;
+    [SerializeField] private Button _closeBuildMenuButton;
     [SerializeField] private Canvas _buildCanvas;
 
     private Building _createdBuilding;
+    private BuildingAnimator _buildingAnimator = new BuildingAnimator();
+    private BuildBlockAnimator _buildBlockAnimator = new BuildBlockAnimator();
+    private bool _buildingBuilded;
+
+    private bool AllBlocksBuilded => _createdBuilding.BuildedBlocksCount == _createdBuilding.BlocksCount;
+
+    private void OnBlocksCountChanged(int buildedBlocks, int allBlocks) => _buildProgressShower.ShowProgress(buildedBlocks, allBlocks);
+    private void OnBlockActivated(BuildBlock block) => _buildBlockAnimator.LaunchBuildAnimation(block);
+    private void OnBuildingDecreased() => _buildingCreator.TryDestroyCreatedBuilding();
+    private void OnBuildingDestroyed() => _buildingCreator.TryCreateBuilding();
 
     private void OnBlockBuilded()
     {
-        if (_createdBuilding.BuildedBlocksCount ==_createdBuilding.BlocksCount)
+        if (AllBlocksBuilded && _buildingAnimator.DecreaseAnimationLaunched == false)
         {
+            _buildingBuilded = true;
+            _buildBlockButton.interactable = false;
             _buildBlockButton.onClick.RemoveAllListeners();
-            _createdBuilding.BlockBuilded -= OnBlockBuilded;
-            _buildingCreator.TryDestroyCreatedBuilding();
+
+            _createdBuilding.BlockActivated -= OnBlockActivated;
+            _createdBuilding.BlocksCountChanged -= OnBlocksCountChanged;
+
+            _buildingAnimator.LaunchDecreaseBuildingAnimation(_createdBuilding, _confettiParticle);
         }
     }
 
-    private void OnBuildingCreated(Building building)
+    private void OnBuildingCreated(Building building, int createdBuildingNumber)
     {
         _createdBuilding = building;
-        _createdBuilding.BlockBuilded += OnBlockBuilded;
+        _buildProgressShower.ShowBuildingNumber(createdBuildingNumber);
+
+        _createdBuilding.BlockActivated += OnBlockActivated;
+        _createdBuilding.BlocksCountChanged += OnBlocksCountChanged;
+
         _buildBlockButton.onClick.AddListener(() => _createdBuilding.TryBuildBlock());
+        _buildingBuilded = false;
     }
 
-    private void BuildingDestroyed()
+    private void TryInitializeBuildButton()
     {
-        _buildingCreator.TryCreateBuilding();
+        if (_buildingBuilded == false)
+        {
+            if (_createdBuilding.CanBuyBlock && _createdBuilding.BlocksEnough)
+                _buildBlockButton.interactable = true;
+            else
+                _buildBlockButton.interactable = false;
+        }
     }
 
     private void OnEnable()
     {
+        _buildBlockAnimator.BlockBuilded += OnBlockBuilded;
         _buildingCreator.BuildingCreated += OnBuildingCreated;
-        _buildingCreator.BuildingDestroyed += BuildingDestroyed;
+        _buildingCreator.BuildingDestroyed += OnBuildingDestroyed;
+        _buildingAnimator.BuildingDecreased += OnBuildingDecreased;
+
         _openBuildMenuButton.onClick.AddListener(() => _buildCanvas.gameObject.SetActive(true));
+        _closeBuildMenuButton.onClick.AddListener(() => _buildCanvas.gameObject.SetActive(false));
     }
 
     private void OnDisable()
     {
+        _buildBlockAnimator.BlockBuilded -= OnBlockBuilded;
         _buildingCreator.BuildingCreated -= OnBuildingCreated;
-        _buildingCreator.BuildingDestroyed -= BuildingDestroyed;
+        _buildingCreator.BuildingDestroyed -= OnBuildingDestroyed;
+        _buildingAnimator.BuildingDecreased -= OnBuildingDecreased;
+
         _openBuildMenuButton.onClick.RemoveAllListeners();
+        _closeBuildMenuButton.onClick.RemoveAllListeners();
     }
+
+    private void Update() => TryInitializeBuildButton();
 }

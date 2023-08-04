@@ -28,7 +28,7 @@ public class MergeBlockPresenter : MonoBehaviour
             {
                 if (_mergeBlock.MergeActivated)
                 {
-                    _mergeBlock.CreateMergedBlock(mergeBlock.gameObject);
+                    _mergeBlock.TryCreateMergedBlock(mergeBlock.gameObject);
                 }
             }
         }   

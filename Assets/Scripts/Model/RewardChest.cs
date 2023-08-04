@@ -17,7 +17,7 @@ public class RewardChest : MonoBehaviour
     {
         if (_rewardApplied == false)
         {
-            _wallet.TryAddBuildBlocks(_buildBlockReward);
+            _wallet.TryIncreaseBuildBlocksMoney(_buildBlockReward);
             _rewardApplied = true;
         }
     }

@@ -10,8 +10,15 @@ public class WalletPresenter : MonoBehaviour
     {
         _wallet = wallet;
         _wallet.MoneyCountChanged += OnMoneyCountChanged;
+        _wallet.BuildBlocksMoneyChanged += OnBuildBlocksMoneyChanged;
+    }
+
+    private void OnDisable()
+    {
+        _wallet.MoneyCountChanged -= OnMoneyCountChanged;
+        _wallet.BuildBlocksMoneyChanged -= OnBuildBlocksMoneyChanged;
     }
 
     private void OnMoneyCountChanged(double money) => _walletContentShower.ShowMoneyCount(money);
-    private void OnDisable() => _wallet.MoneyCountChanged -= OnMoneyCountChanged;
+    private void OnBuildBlocksMoneyChanged(int buildBlocksMoney) => _walletContentShower.ShowBuildBlockMoneyCount(buildBlocksMoney);
 }

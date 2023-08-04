@@ -4,41 +4,51 @@ using UnityEngine.Events;
 
 public class Building : MonoBehaviour
 {
-    public event UnityAction BlockBuilded;
     public int BlocksCount => _blocks.Count;
     public int BuildedBlocksCount => _buildedBlocks.Count;
+    public bool CanBuyBlock => _wallet.BuildBlocksMoney >= _buildBlockPrice;
+    public bool BlocksEnough => _buildedBlocks.Count < _blocks.Count && _remainingBlocks.Count > 0;
 
-    [SerializeField] private List<GameObject> _blocks;
+    public event UnityAction<BuildBlock> BlockActivated;
+    public event UnityAction<int, int> BlocksCountChanged;
 
-    private List<GameObject> _buildedBlocks = new List<GameObject>();
-    private List<GameObject> _remainingBlocks = new List<GameObject>();
- 
-    private bool CanBuildBlock => _buildedBlocks.Count < _blocks.Count && _remainingBlocks.Count > 0;
+    [SerializeField] private int _buildBlockPrice;
+    [Space(10), SerializeField] private List<BuildBlock> _blocks;
+
+    private List<BuildBlock> _buildedBlocks = new List<BuildBlock>();
+    private List<BuildBlock> _remainingBlocks = new List<BuildBlock>();
+    private Wallet _wallet;
+
+    public void Intialize(Wallet wallet) => _wallet = wallet;
 
     public void TryBuildBlock()
     {
-        if (CanBuildBlock)
+        if (BlocksEnough && CanBuyBlock)
         {
+            _wallet.TryDecreaseBuildBlocksMoney(_buildBlockPrice);
             int blockNumber = Random.Range(0, _remainingBlocks.Count);
 
-            _remainingBlocks[blockNumber].SetActive(true);
+            _remainingBlocks[blockNumber].gameObject.SetActive(true);
+            BlockActivated?.Invoke(_remainingBlocks[blockNumber]);
+
             _buildedBlocks.Add(_remainingBlocks[blockNumber]);
             _remainingBlocks.RemoveAt(blockNumber);
-
-            BlockBuilded?.Invoke();
+            BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
         }
     }
 
-    private void Initialize()
+    private void CalculateBlocksCount()
     {
         for (int i = 0; i < _blocks.Count; i++)
         {
-            if (_blocks[i].activeInHierarchy == true)
+            if (_blocks[i].gameObject.activeInHierarchy == true)
                 _buildedBlocks.Add(_blocks[i]);
             else
                 _remainingBlocks.Add(_blocks[i]);
         }
+
+        BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
     }
 
-    private void Start() => Initialize();
+    private void Start() => CalculateBlocksCount();
 }

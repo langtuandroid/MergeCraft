@@ -16,5 +16,9 @@ public class RewardChestAnimator : MonoBehaviour
         _chestImage.DOColor(_openingChestColor, _openingAnimationDuration).OnComplete(() => _chestImage.gameObject.SetActive(false));
     }
 
-    private void OnDestroy() => DOTween.Kill(_chestImage);
+    private void OnDestroy()
+    {
+        DOTween.Kill(_chestImage.transform);
+        DOTween.Kill(_chestImage);
+    }
 }

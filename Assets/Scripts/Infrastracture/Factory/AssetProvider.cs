@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FactoriesPrefabs : MonoBehaviour
+public class AssetProvider : MonoBehaviour
 {
     public Hud HudPrefab => _hudPrefab;
 

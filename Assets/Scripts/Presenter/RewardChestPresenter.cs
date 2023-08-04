@@ -13,7 +13,7 @@ public class RewardChestPresenter : MonoBehaviour
     {
         if (_chest.RewardApplied == false)
         {
-            _rewardShower.ShowBuildBlockCount(_chest.BuildBlockReward);
+            _rewardShower.ShowBuildBlockMoneyCount(_chest.BuildBlockReward);
             _rewardChestAnimator.LaunchOpenChestAnimation();
             _rewardAnimator.LaunchGettingBlockRewardAnimation();
             _chest.TryApplyReward();

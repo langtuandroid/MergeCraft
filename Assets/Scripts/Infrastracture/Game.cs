@@ -4,9 +4,9 @@ public class Game
 
     public void ActivateBootstrapState() => _gameStateMachine.Enter<BootstrapState>();
 
-    public Game(FactoriesPrefabs factoriesPrefabs)
+    public Game(AssetProvider assetProvider)
     {
-        UIFactory UIfactory = new UIFactory(factoriesPrefabs.HudPrefab);
+        UIFactory UIfactory = new UIFactory(assetProvider.HudPrefab);
         Wallet wallet = new Wallet();
 
         _gameStateMachine = new GameStateMachine(UIfactory, wallet);
