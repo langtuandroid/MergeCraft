@@ -2,6 +2,7 @@ using UnityEngine.Events;
 
 public class Wallet
 {
+    public double Money => _money;
     public int BuildBlocksMoney => _buildBlocksMoney;
 
     public event UnityAction<double> MoneyCountChanged;
@@ -15,6 +16,15 @@ public class Wallet
         if (money > 0)
         {
             _money += money;
+            MoneyCountChanged?.Invoke(_money);
+        }
+    }
+
+    public void TryDecreaseMoney(double money)
+    {
+        if (money > 0 && money <= _money)
+        {
+            _money -= money;
             MoneyCountChanged?.Invoke(_money);
         }
     }

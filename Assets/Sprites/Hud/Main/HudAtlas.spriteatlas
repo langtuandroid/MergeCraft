@@ -55,6 +55,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 6869d4f2e5c322647a408548f5c6a5be, type: 3}
     - {fileID: 2800000, guid: 3bc80e8773140bf4bbc2aba5f1c96d3e, type: 3}
     - {fileID: 2800000, guid: 72cce8cd0cb78574b984ee9f1a25583a, type: 3}
+    - {fileID: 2800000, guid: 85650f5c1424d2344b101cdb011e8199, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -67,6 +68,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 679a831b2eb747b4dafc438691cfd6d5, type: 3}
   - {fileID: 21300000, guid: bfa16e2b923e4434aa9bde30c0e31b18, type: 3}
   - {fileID: 21300000, guid: 4490a4abc9ae9a0469604e77ebb2cf97, type: 3}
+  - {fileID: 21300000, guid: 85650f5c1424d2344b101cdb011e8199, type: 3}
   - {fileID: 21300000, guid: 72cce8cd0cb78574b984ee9f1a25583a, type: 3}
   - {fileID: 21300000, guid: 840e15edd393ec642bc61df914e8f7fa, type: 3}
   - {fileID: 21300000, guid: 29b6118fc782533479f6fbad2a36c893, type: 3}
@@ -79,6 +81,7 @@ SpriteAtlas:
   - BuildBlock
   - Upgrade_icon 1
   - Liberary_icon 1
+  - Notification
   - ProgressBar
   - Coins
   - Build_icon 1

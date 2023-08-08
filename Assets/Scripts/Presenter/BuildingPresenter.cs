@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class BuildingPresenter : MonoBehaviour
 {
+    [SerializeField] private Notifications _notifications;
     [SerializeField] private BuildingCreator _buildingCreator;
     [SerializeField] private BuildProgressShower _buildProgressShower;
     [SerializeField] private ParticleSystem _confettiParticle;
@@ -22,7 +23,7 @@ public class BuildingPresenter : MonoBehaviour
     private void OnBlockActivated(BuildBlock block) => _buildBlockAnimator.LaunchBuildAnimation(block);
     private void OnBuildingDecreased() => _buildingCreator.TryDestroyCreatedBuilding();
     private void OnBuildingDestroyed() => _buildingCreator.TryCreateBuilding();
-
+    
     private void OnBlockBuilded()
     {
         if (AllBlocksBuilded && _buildingAnimator.DecreaseAnimationLaunched == false)
@@ -42,22 +43,30 @@ public class BuildingPresenter : MonoBehaviour
     {
         _createdBuilding = building;
         _buildProgressShower.ShowBuildingNumber(createdBuildingNumber);
+        _buildProgressShower.ShowBuildPrice(_createdBuilding.BuildBlockPrice);
 
         _createdBuilding.BlockActivated += OnBlockActivated;
         _createdBuilding.BlocksCountChanged += OnBlocksCountChanged;
 
         _buildBlockButton.onClick.AddListener(() => _createdBuilding.TryBuildBlock());
+        _createdBuilding.CalculateBlocksCount();
         _buildingBuilded = false;
     }
 
-    private void TryInitializeBuildButton()
+    private void TryActivateBuildButton()
     {
         if (_buildingBuilded == false)
         {
             if (_createdBuilding.CanBuyBlock && _createdBuilding.BlocksEnough)
+            {
                 _buildBlockButton.interactable = true;
+                _notifications.ActivateBuildNotification();
+            }
             else
+            {
                 _buildBlockButton.interactable = false;
+                _notifications.DeactivateBuildNotification();
+            }
         }
     }
 
@@ -83,5 +92,5 @@ public class BuildingPresenter : MonoBehaviour
         _closeBuildMenuButton.onClick.RemoveAllListeners();
     }
 
-    private void Update() => TryInitializeBuildButton();
+    private void Update() => TryActivateBuildButton();
 }

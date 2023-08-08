@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class Building : MonoBehaviour
 {
     public int BlocksCount => _blocks.Count;
+    public int BuildBlockPrice => _buildBlockPrice;
     public int BuildedBlocksCount => _buildedBlocks.Count;
     public bool CanBuyBlock => _wallet.BuildBlocksMoney >= _buildBlockPrice;
     public bool BlocksEnough => _buildedBlocks.Count < _blocks.Count && _remainingBlocks.Count > 0;
@@ -37,7 +38,7 @@ public class Building : MonoBehaviour
         }
     }
 
-    private void CalculateBlocksCount()
+    public void CalculateBlocksCount()
     {
         for (int i = 0; i < _blocks.Count; i++)
         {
@@ -49,6 +50,4 @@ public class Building : MonoBehaviour
 
         BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
     }
-
-    private void Start() => CalculateBlocksCount();
 }

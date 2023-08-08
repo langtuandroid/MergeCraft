@@ -35,9 +35,9 @@ public class LibraryBlockSwitcher : MonoBehaviour
         TryDeactivateNextBlockButton();
     }
 
-    private void SetButtonActive(bool deactivateButton, Button button)
+    private void SetButtonActive(bool canDeactivateButton, Button button)
     {
-        if (deactivateButton)
+        if (canDeactivateButton)
             button.interactable = false;
         else
             button.interactable = true;

@@ -8,7 +8,6 @@ public class BlockCreator : MonoBehaviour, IActivatable
     public bool CreatorActivated => _creatorActivated;
 
     [SerializeField] private float _creationDuration;
-    [SerializeField] private int _creationBlockLevel;
     [Space(10), SerializeField] private Cell[] _cells;
     [SerializeField] private MergeBlock[] _blocks;
 
@@ -17,6 +16,7 @@ public class BlockCreator : MonoBehaviour, IActivatable
     private float _passedTime;
     private bool _canCreate;
     private bool _creatorActivated;
+    private int _creationBlockLevel = 0;
 
     public void Initialize(Wallet wallet) => _wallet = wallet;
     public void Activate() => _creatorActivated = true;

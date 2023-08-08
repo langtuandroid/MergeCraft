@@ -27,6 +27,9 @@ public static class NumberFormater
         "B",
         "T",
         "G",
-        "V"
+        "V",
+        "F",
+        "U",
+        "P"
     };
 }
