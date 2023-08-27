@@ -4,17 +4,16 @@ using UnityEngine.UI;
 public abstract class Upgrade
 {
     public Button BuyUpgradeButton => _buyUpgradeButton;
-    public bool CanBuyUpgrade => _wallet.Money >= UpgradePrice;
+    public bool CanBuyUpgrade => _wallet.Money >= _upgradePrice;
 
     [SerializeField] private Button _buyUpgradeButton;
     [Space(10), SerializeField] private double _startUpgradePrice;
     [SerializeField] private int _priceIncreaseMultiplier;
     [SerializeField] private int _maxUpgradeLevel;
 
-    private int _upgradeLevel = 0;
+    private int _upgradeLevel = 1;
+    private double _upgradePrice;
     private Wallet _wallet;
-
-    private double UpgradePrice => _startUpgradePrice * _upgradeLevel * _priceIncreaseMultiplier;
 
     public void RemoveBuyButtonListeners() =>
         _buyUpgradeButton.onClick.RemoveAllListeners();
@@ -23,18 +22,26 @@ public abstract class Upgrade
     {
         _wallet = wallet;
         _buyUpgradeButton.onClick.AddListener(() => TryBuyUpgrade());
+
+        if (_upgradeLevel == 1)
+            _upgradePrice = _startUpgradePrice;
+
+        InvokeLevelChangeEvent(_upgradePrice, _upgradeLevel);
     }
 
     private void TryBuyUpgrade()
     {
         if (CanBuyUpgrade)
         {
-            _wallet.TryDecreaseMoney(UpgradePrice);
+            _wallet.TryDecreaseMoney(_upgradePrice);
+            _upgradePrice *= _priceIncreaseMultiplier;
             _upgradeLevel++;
 
-            InvokeBuyEvent(UpgradePrice, _upgradeLevel);
+            InvokeBuyEvent();
+            InvokeLevelChangeEvent(_upgradePrice, _upgradeLevel);
         }
     }
 
-    protected abstract void InvokeBuyEvent(double upgradePrice, int upgradeLevel);
+    protected abstract void InvokeBuyEvent();
+    protected abstract void InvokeLevelChangeEvent(double upgradePrice, int upgradeLevel);
 }

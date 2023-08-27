@@ -6,9 +6,9 @@ public class BlockCreator : MonoBehaviour, IActivatable
 {
     public event UnityAction<float> CreationProgressChanged;
     public bool CreatorActivated => _creatorActivated;
+    public int CreationBlockLevel => _creationBlockLevel;
 
-    [SerializeField] private float _creationDuration;
-    [Space(10), SerializeField] private Cell[] _cells;
+    [SerializeField] private Cell[] _cells;
     [SerializeField] private MergeBlock[] _blocks;
 
     private List<Cell> _emptyCells = new List<Cell>();
@@ -17,9 +17,23 @@ public class BlockCreator : MonoBehaviour, IActivatable
     private bool _canCreate;
     private bool _creatorActivated;
     private int _creationBlockLevel = 0;
+    private float _creationDuration = 3;
+    private float _durationDecreaseStep = 0.1f;
 
     public void Initialize(Wallet wallet) => _wallet = wallet;
     public void Activate() => _creatorActivated = true;
+
+    public void TryDecreaseCreationDuration()
+    {
+        if (_creationDuration - _durationDecreaseStep >= 0)
+            _creationDuration -= _durationDecreaseStep;
+    }
+
+    public void TryIncreaseBlockLevel()
+    {
+        if (_creationBlockLevel + 1 < _blocks.Length)
+            _creationBlockLevel++;
+    }
 
     public void TryCreateBlock()
     {

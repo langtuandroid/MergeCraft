@@ -4,61 +4,114 @@ using UnityEngine.UI;
 public class ShopPresenter : MonoBehaviour
 {
     [SerializeField] private BlockCreator _blockCreator;
+    [SerializeField] private BlockReplacer _blockReplacer;
     [SerializeField] private Notifications _notifications;
-    [SerializeField] private MoneyGenerator _moneyGenerator;
-    [SerializeField] private UpgradesPricesShower _upgradesPricesShower;
+    [SerializeField] private UpgradesInfoShower _upgradesPricesShower;
     [SerializeField] private Button _closeShopButton;
     [SerializeField] private Button _openShopButton;
     [SerializeField] private GameObject _shopPanel;
-    [Space(10), SerializeField] private BlockLevelUpgrade[] _upgrades;
     [Space(10), SerializeField] private BlockLevelUpgrade _blockLevelUpgrade;
+    [SerializeField] private CreationSpeedUpgrade _creationSpeedUpgrade;
+    [SerializeField] private BlockMoneyUpgrade _blockMoneyUpgrade;
+    [SerializeField] private MoneyUpgrade _moneyUpgrade;
 
     private Wallet _wallet;
 
-    public void Initialize(Wallet wallet) => _wallet = wallet;
+    private bool BlockUpgradesButtonsDisabled =>
+        _blockLevelUpgrade.CanBuyUpgrade == false && _creationSpeedUpgrade.CanBuyUpgrade == false;
+
+    private bool MoneyUpgradesButtonsDisabled =>
+        _blockMoneyUpgrade.CanBuyUpgrade == false && _moneyUpgrade.CanBuyUpgrade == false;
+
+    public void Initialize(Wallet wallet)
+    {
+        _wallet = wallet;
+        _moneyUpgrade.Initialize(_wallet);
+        _blockLevelUpgrade.Initialize(_wallet);
+        _creationSpeedUpgrade.Initialize(_wallet);
+        _blockMoneyUpgrade.Initialize(_wallet);
+    }
+
+    private void OnCreationSpeedUpgradePurchased() => _blockCreator.TryDecreaseCreationDuration();
+    private void OnMoneyUpgradePurchased() => _wallet.TryIncreaseMoneyMultiplier();
+    private void OnBlockMoneyUpgradePurchased() => _wallet.TryIncreaseBlockMoneyMultiplier();
+
+    private void OnBlockUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
+        _upgradesPricesShower.ShowBlockLevelInfo(upgradePrice, upgradeLevel);
+
+    private void OnCreationSpeedUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
+        _upgradesPricesShower.ShowCreationSpeedInfo(upgradePrice, upgradeLevel);
+
+    private void OnMoneyUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
+        _upgradesPricesShower.ShowMoneyMultiplierInfo(upgradePrice, upgradeLevel);
+
+    private void OnBlockMoneyUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
+        _upgradesPricesShower.ShowBlockMoneyMultiplierInfo(upgradePrice, upgradeLevel);
+
+    private void OnBlockLevelUpgradePurchased()
+    {
+        _blockCreator.TryIncreaseBlockLevel();
+        _blockReplacer.TryReplaceBlocks(_blockCreator.CreationBlockLevel);
+    }
+
+    private void TryActivateBuyButton(Upgrade upgrade)
+    {
+        if (upgrade.CanBuyUpgrade)
+        {
+            upgrade.BuyUpgradeButton.interactable = true;
+            _notifications.ActivateShopNotification();
+        }
+        else
+        {
+            upgrade.BuyUpgradeButton.interactable = false;
+        }
+    }
 
     private void Update()
     {
-        int enoughCount = 0;
+        TryActivateBuyButton(_blockLevelUpgrade);
+        TryActivateBuyButton(_creationSpeedUpgrade);
+        TryActivateBuyButton(_moneyUpgrade);
+        TryActivateBuyButton(_blockMoneyUpgrade);
 
-        for (int i = 0; i < _upgrades.Length; i++)
-        {
-            if (_upgrades[i].CanBuyUpgrade)
-            {
-                _upgrades[i].BuyUpgradeButton.interactable = true;
-                _notifications.ActivateShopNotification();
-                enoughCount = 0;
-            }
-            else
-            {
-                _upgrades[i].BuyUpgradeButton.interactable = false;
-                enoughCount++;
-
-                if (enoughCount == _upgrades.Length)
-                    _notifications.DeactivateShopNotification();
-            }
-        }
+        if (BlockUpgradesButtonsDisabled && MoneyUpgradesButtonsDisabled)
+            _notifications.DeactivateShopNotification();
     }
 
     private void OnEnable()
     {
+        _blockLevelUpgrade.BlockLevelUpgradePurchased += OnBlockLevelUpgradePurchased;
+        _creationSpeedUpgrade.CreationSpeedUpgradePurchased += OnCreationSpeedUpgradePurchased;
+        _moneyUpgrade.MoneyUpgradePurchased += OnMoneyUpgradePurchased;
+        _blockMoneyUpgrade.BlockMoneyUpgradePurchased += OnBlockMoneyUpgradePurchased;
+
+        _blockLevelUpgrade.BlockUpgradeLevelChanged += OnBlockUpgradeLevelChanged;
+        _creationSpeedUpgrade.CreationSpeedUpgradeLevelChanged += OnCreationSpeedUpgradeLevelChanged;
+        _moneyUpgrade.MoneyUpgradeLevelChanged += OnMoneyUpgradeLevelChanged;
+        _blockMoneyUpgrade.BlockMoneyUpgradeLevelChanged += OnBlockMoneyUpgradeLevelChanged;
+
         _openShopButton.onClick.AddListener(() => _shopPanel.SetActive(true));
         _closeShopButton.onClick.AddListener(() => _shopPanel.SetActive(false));
-
-        foreach (var upgrade in _upgrades)
-        {
-            upgrade.Initialize(_wallet);
-        }
     }
 
     private void OnDisable()
     {
+        _blockLevelUpgrade.BlockLevelUpgradePurchased -= OnBlockLevelUpgradePurchased;
+        _creationSpeedUpgrade.CreationSpeedUpgradePurchased -= OnCreationSpeedUpgradePurchased;
+        _moneyUpgrade.MoneyUpgradePurchased -= OnMoneyUpgradePurchased;
+        _blockMoneyUpgrade.BlockMoneyUpgradePurchased -= OnBlockMoneyUpgradePurchased;
+
+        _blockLevelUpgrade.BlockUpgradeLevelChanged -= OnBlockUpgradeLevelChanged;
+        _creationSpeedUpgrade.CreationSpeedUpgradeLevelChanged -= OnCreationSpeedUpgradeLevelChanged;
+        _moneyUpgrade.MoneyUpgradeLevelChanged -= OnMoneyUpgradeLevelChanged;
+        _blockMoneyUpgrade.BlockMoneyUpgradeLevelChanged -= OnBlockMoneyUpgradeLevelChanged;
+
+        _blockLevelUpgrade.RemoveBuyButtonListeners();
+        _creationSpeedUpgrade.RemoveBuyButtonListeners();
+        _moneyUpgrade.RemoveBuyButtonListeners();
+        _blockMoneyUpgrade.RemoveBuyButtonListeners();
+
         _openShopButton.onClick.RemoveAllListeners();
         _closeShopButton.onClick.RemoveAllListeners();
-
-        foreach (var upgrade in _upgrades)
-        {
-            upgrade.RemoveBuyButtonListeners();
-        }
     }
 }

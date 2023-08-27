@@ -3,9 +3,11 @@ using UnityEngine.Events;
 [System.Serializable]
 public class BlockLevelUpgrade : Upgrade
 {
-    public event UnityAction<double, int> BlockLevelUpgradePurchased;
+    public event UnityAction BlockLevelUpgradePurchased;
+    public event UnityAction<double, int> BlockUpgradeLevelChanged;
 
-    protected override void InvokeBuyEvent(double upgradePrice, int upgradeLevel) => 
-        BlockLevelUpgradePurchased?.Invoke(upgradePrice, upgradeLevel);
+    protected override void InvokeBuyEvent() => BlockLevelUpgradePurchased?.Invoke();
 
+    protected override void InvokeLevelChangeEvent(double upgradePrice, int upgradeLevel) => 
+        BlockUpgradeLevelChanged?.Invoke(upgradePrice, upgradeLevel);
 }

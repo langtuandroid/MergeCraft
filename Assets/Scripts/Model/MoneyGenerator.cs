@@ -6,19 +6,16 @@ public class MoneyGenerator : MonoBehaviour, IActivatable
     public bool GeneratorActivated => _generatorActivated;
 
     [SerializeField] private int _raiseValue;
-    [Space(10), SerializeField] private float _moneyGenerationDelay;
-    [SerializeField] private float _moneyMultiplier;
+    [SerializeField] private float _moneyGenerationDelay;
     [Space(10), SerializeField] private Cell[] _cells;
 
     private Wallet _wallet;
     private float _passedTime;
     private double _generatedMoney;
     private bool _generatorActivated;
-    private readonly float _multiplierIncreaseStep = 0.05f;
 
     public void Activate() => _generatorActivated = true;
     public void Initialize(Wallet wallet) => _wallet = wallet;
-    public void IncreaseMultiplier() => _moneyMultiplier += _multiplierIncreaseStep;
 
     public void TryLaunchGeneration()
     {
@@ -44,7 +41,7 @@ public class MoneyGenerator : MonoBehaviour, IActivatable
                     double moneyForBlock = (Mathf.Pow(_raiseValue, _cells[i].BlockInCell.BlockLevel));
                     _generatedMoney += moneyForBlock;
 
-                    _cells[i].BlockInCell.RewardShower.ShowMoneyCount(moneyForBlock);
+                    _cells[i].BlockInCell.RewardShower.ShowMoneyCount(moneyForBlock * _wallet.MoneyMultiplier);
                     _cells[i].BlockInCell.RewardAnimator.LaunchGettingMoneyRewardAnimation();
                 }
             }
