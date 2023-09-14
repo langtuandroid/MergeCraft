@@ -21,6 +21,9 @@ public class LibraryBlockSwitcher : MonoBehaviour
 
     public void SwitchToNextBlock() => SwitchTo(_displayedBlockNumber + 1);
     public void SwitchToPreviouslyBlock() => SwitchTo(_displayedBlockNumber - 1);
+    public string GetBlockName(int nameNumber) => _englishMergeBlockNames[nameNumber];
+    public Sprite GetBlockSprite(int spriteNumber) => _mergeBlockSprites[spriteNumber];
+
     private void TryDeactivateNextBlockButton() => SetButtonActive(CanDeactivateNextBlockButton, _nextBlockButton);
     private void TryDeactivatePreviouslyBlockButton() => SetButtonActive(CanDeactivatePreviouslyBlockButton, _previouslyBlockButton);
 

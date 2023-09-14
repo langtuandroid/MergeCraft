@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 public class Cell : MonoBehaviour
 {
+    public event UnityAction<MergeBlock> CellOccupied;
     public MergeBlock BlockInCell => _blockInCell;
     public bool Blocked => _blocked;
 
@@ -26,6 +28,7 @@ public class Cell : MonoBehaviour
         block.transform.localPosition = Vector3.zero;
 
         _blockInCell = block;
+        CellOccupied?.Invoke(_blockInCell);
     }
 
     private void SetBlockActive(bool blockActive, Sprite cellSprite)
