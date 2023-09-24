@@ -35,6 +35,16 @@ public class BlockCreator : MonoBehaviour, IActivatable
             _creationBlockLevel++;
     }
 
+    public void TryCreateAllBlocks()
+    {
+        for (int i = 0; i < _cells.Length; i++)
+        {
+            _emptyCells.Clear();
+            InitializeEmptyCells();
+            CreateBlock();
+        }
+    }
+
     public void TryCreateBlock()
     {
         InitializeEmptyCells();

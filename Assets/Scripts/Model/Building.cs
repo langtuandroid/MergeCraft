@@ -19,14 +19,21 @@ public class Building : MonoBehaviour
     private List<BuildBlock> _buildedBlocks = new List<BuildBlock>();
     private List<BuildBlock> _remainingBlocks = new List<BuildBlock>();
     private Wallet _wallet;
+    private int _reward;
 
-    public void Intialize(Wallet wallet) => _wallet = wallet;
+    public void ApplyBuildingReward() => _wallet.TryAddMoney(_reward);
+
+    public void Intialize(Wallet wallet, int reward)
+    {
+        _wallet = wallet;
+        _reward = reward;
+    }
 
     public void TryBuildBlock()
     {
         if (BlocksEnough && CanBuyBlock)
         {
-            _wallet.TryDecreaseBuildBlocksMoney(_buildBlockPrice);
+            _wallet.TryReduceBuildBlocksMoney(_buildBlockPrice);
             int blockNumber = Random.Range(0, _remainingBlocks.Count);
 
             _remainingBlocks[blockNumber].gameObject.SetActive(true);

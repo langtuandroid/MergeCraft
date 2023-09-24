@@ -11,6 +11,7 @@ public class Hud : MonoBehaviour
     [SerializeField] private MoneyGenerator _moneyGenerator;
     [SerializeField] private WalletPresenter _walletPresenter;
     [SerializeField] private BuildingCreator _buildingCreator;
+    [SerializeField] private AdvertisementPresenter _advertisementPresenter;
 
     public void Initialize(Wallet wallet)
     {
@@ -20,6 +21,7 @@ public class Hud : MonoBehaviour
         _moneyGenerator.Initialize(wallet);
         _walletPresenter.Initialize(wallet);
         _buildingCreator.Initialize(wallet);
+        _advertisementPresenter.Initialize(wallet);
 
         HudInitialized?.Invoke();
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class RewardChest : MonoBehaviour
 {
     public Wallet Wallet => _wallet;
-    public int BuildBlockReward => _buildBlockReward * _wallet.BlockMoneyMultiplier;
+    public int BuildBlockReward => _buildBlockReward + _wallet.AdditionalBlockMoney;
     public bool RewardApplied => _rewardApplied;
 
     private readonly int _buildBlockReward = 5;
@@ -17,7 +17,7 @@ public class RewardChest : MonoBehaviour
     {
         if (_rewardApplied == false)
         {
-            _wallet.TryIncreaseBuildBlocksMoney(_buildBlockReward);
+            _wallet.TryAddBuildBlocksMoney(_buildBlockReward);
             _rewardApplied = true;
         }
     }

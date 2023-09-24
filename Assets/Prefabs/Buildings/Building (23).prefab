@@ -1941,6 +1941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b529c119009613f4daf3f07f1b7a48e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _reward: 10000
   _buildBlockPrice: 15
   _blocks:
   - {fileID: 3106628461393297301}

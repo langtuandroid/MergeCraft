@@ -6,8 +6,8 @@ public class BlockCreatorPresenter : MonoBehaviour
     [SerializeField] private CreationProgressShower _creationProgressShower;
 
     private void OnCreationProgressChanged(float progress) => _creationProgressShower.Show(progress);
-    private void OnEnable() => _blockCreator.CreationProgressChanged += OnCreationProgressChanged;
     private void OnDisable() => _blockCreator.CreationProgressChanged -= OnCreationProgressChanged;
+    private void OnEnable() => _blockCreator.CreationProgressChanged += OnCreationProgressChanged;
 
     private void Update()
     {

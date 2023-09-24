@@ -7,23 +7,30 @@ public class BuildingPresenter : MonoBehaviour
     [SerializeField] private BuildingCreator _buildingCreator;
     [SerializeField] private BuildProgressShower _buildProgressShower;
     [SerializeField] private ParticleSystem _confettiParticle;
+    [SerializeField] private Image _buildingRewardImage;
     [SerializeField] private Button _buildBlockButton;
     [SerializeField] private Button _openBuildMenuButton;
     [SerializeField] private Button _closeBuildMenuButton;
     [SerializeField] private Canvas _buildCanvas;
-
+   
     private Building _createdBuilding;
     private BuildingAnimator _buildingAnimator = new BuildingAnimator();
     private BuildBlockAnimator _buildBlockAnimator = new BuildBlockAnimator();
+    private BuildingRewardAnimator _buildingRewardAnimator = new BuildingRewardAnimator();
     private bool _buildingBuilded;
 
     private bool AllBlocksBuilded => _createdBuilding.BuildedBlocksCount == _createdBuilding.BlocksCount;
 
     private void OnBlocksCountChanged(int buildedBlocks, int allBlocks) => _buildProgressShower.ShowProgress(buildedBlocks, allBlocks);
     private void OnBlockActivated(BuildBlock block) => _buildBlockAnimator.LaunchBuildAnimation(block);
-    private void OnBuildingDecreased() => _buildingCreator.TryDestroyCreatedBuilding();
     private void OnBuildingDestroyed() => _buildingCreator.TryCreateBuilding();
-    
+
+    private void OnBuildingDecreased()
+    {
+        _createdBuilding.ApplyBuildingReward();
+        _buildingCreator.TryDestroyCreatedBuilding();
+    }
+
     private void OnBlockBuilded()
     {
         if (AllBlocksBuilded && _buildingAnimator.DecreaseAnimationLaunched == false)
@@ -36,6 +43,7 @@ public class BuildingPresenter : MonoBehaviour
             _createdBuilding.BlocksCountChanged -= OnBlocksCountChanged;
 
             _buildingAnimator.LaunchDecreaseBuildingAnimation(_createdBuilding, _confettiParticle);
+            _buildingRewardAnimator.LaunchIncreaseRewardAnimation(_buildingRewardImage);
         }
     }
 

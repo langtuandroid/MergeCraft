@@ -9,6 +9,7 @@ public class HudPresenter : MonoBehaviour
 
     private void OnHudInitialized()
     {
+        _blockCreator.TryCreateAllBlocks();
         _blockCreator.Activate();
         _moneyGenerator.Activate();
         _buildingCreator.Activate();

@@ -47,7 +47,7 @@ public class MoneyGenerator : MonoBehaviour, IActivatable
             }
         }
 
-        _wallet.TryIncreaseMoney(_generatedMoney);
+        _wallet.TryAddMoney(_generatedMoney);
     }
 
 #if UNITY_EDITOR

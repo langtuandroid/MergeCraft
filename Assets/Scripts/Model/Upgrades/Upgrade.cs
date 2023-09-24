@@ -8,8 +8,8 @@ public abstract class Upgrade
 
     [SerializeField] private Button _buyUpgradeButton;
     [Space(10), SerializeField] private double _startUpgradePrice;
-    [SerializeField] private int _priceIncreaseMultiplier;
     [SerializeField] private int _maxUpgradeLevel;
+    [Space(10), SerializeField] private double[] _priceMultipliers;
 
     private int _upgradeLevel = 1;
     private double _upgradePrice;
@@ -33,8 +33,8 @@ public abstract class Upgrade
     {
         if (CanBuyUpgrade)
         {
-            _wallet.TryDecreaseMoney(_upgradePrice);
-            _upgradePrice *= _priceIncreaseMultiplier;
+            _wallet.TryReduceMoney(_upgradePrice);
+            _upgradePrice *= _priceMultipliers[_upgradeLevel - 1];
             _upgradeLevel++;
 
             InvokeBuyEvent();

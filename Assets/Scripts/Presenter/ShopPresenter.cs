@@ -34,7 +34,7 @@ public class ShopPresenter : MonoBehaviour
 
     private void OnCreationSpeedUpgradePurchased() => _blockCreator.TryDecreaseCreationDuration();
     private void OnMoneyUpgradePurchased() => _wallet.TryIncreaseMoneyMultiplier();
-    private void OnBlockMoneyUpgradePurchased() => _wallet.TryIncreaseBlockMoneyMultiplier();
+    private void OnBlockMoneyUpgradePurchased() => _wallet.TryIncreaseAdditionalBlockMoney();
 
     private void OnBlockUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
         _upgradesPricesShower.ShowBlockLevelInfo(upgradePrice, upgradeLevel);
