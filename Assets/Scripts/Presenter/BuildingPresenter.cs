@@ -6,7 +6,7 @@ public class BuildingPresenter : MonoBehaviour
     [SerializeField] private Notifications _notifications;
     [SerializeField] private BuildingCreator _buildingCreator;
     [SerializeField] private BuildProgressShower _buildProgressShower;
-    [SerializeField] private ParticleSystem _confettiParticle;
+    [SerializeField] private TranslatesContainer _translatesContainer;
     [SerializeField] private Image _buildingRewardImage;
     [SerializeField] private Button _buildBlockButton;
     [SerializeField] private Button _openBuildMenuButton;
@@ -21,9 +21,11 @@ public class BuildingPresenter : MonoBehaviour
 
     private bool AllBlocksBuilded => _createdBuilding.BuildedBlocksCount == _createdBuilding.BlocksCount;
 
-    private void OnBlocksCountChanged(int buildedBlocks, int allBlocks) => _buildProgressShower.ShowProgress(buildedBlocks, allBlocks);
     private void OnBlockActivated(BuildBlock block) => _buildBlockAnimator.LaunchBuildAnimation(block);
     private void OnBuildingDestroyed() => _buildingCreator.TryCreateBuilding();
+
+    private void OnBlocksCountChanged(int buildedBlocks, int allBlocks) => 
+        _buildProgressShower.ShowProgress(buildedBlocks, allBlocks);
 
     private void OnBuildingDecreased()
     {
@@ -42,7 +44,7 @@ public class BuildingPresenter : MonoBehaviour
             _createdBuilding.BlockActivated -= OnBlockActivated;
             _createdBuilding.BlocksCountChanged -= OnBlocksCountChanged;
 
-            _buildingAnimator.LaunchDecreaseBuildingAnimation(_createdBuilding, _confettiParticle);
+            _buildingAnimator.LaunchDecreaseBuildingAnimation(_createdBuilding);
             _buildingRewardAnimator.LaunchIncreaseRewardAnimation(_buildingRewardImage);
         }
     }

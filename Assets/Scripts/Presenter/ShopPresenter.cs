@@ -3,18 +3,22 @@ using UnityEngine.UI;
 
 public class ShopPresenter : MonoBehaviour
 {
+    [SerializeField] private TranslatesContainer _translatesContainer;
     [SerializeField] private BlockCreator _blockCreator;
     [SerializeField] private BlockReplacer _blockReplacer;
     [SerializeField] private Notifications _notifications;
     [SerializeField] private UpgradesInfoShower _upgradesPricesShower;
+    [SerializeField] private UpgradesDescriptionShower _upgradesDescriptionShower;
     [SerializeField] private Button _closeShopButton;
     [SerializeField] private Button _openShopButton;
     [SerializeField] private GameObject _shopPanel;
+    [SerializeField] private GameObject _shopTouchBlockator;
     [Space(10), SerializeField] private BlockLevelUpgrade _blockLevelUpgrade;
     [SerializeField] private CreationSpeedUpgrade _creationSpeedUpgrade;
     [SerializeField] private BlockMoneyUpgrade _blockMoneyUpgrade;
     [SerializeField] private MoneyUpgrade _moneyUpgrade;
 
+    private PanelAnimator _panelAnimator = new PanelAnimator();
     private Wallet _wallet;
 
     private bool BlockUpgradesButtonsDisabled =>
@@ -54,6 +58,12 @@ public class ShopPresenter : MonoBehaviour
         _blockReplacer.TryReplaceBlocks(_blockCreator.CreationBlockLevel);
     }
 
+    private void OnTranslateSelected()
+    {
+        _upgradesDescriptionShower.Show(_translatesContainer.SelectedTranslate);
+        _openShopButton.interactable = true;
+    }
+
     private void TryActivateBuyButton(Upgrade upgrade)
     {
         if (upgrade.CanBuyUpgrade)
@@ -80,6 +90,9 @@ public class ShopPresenter : MonoBehaviour
 
     private void OnEnable()
     {
+        _openShopButton.interactable = false;
+        _translatesContainer.TranslateSelected += OnTranslateSelected;
+
         _blockLevelUpgrade.BlockLevelUpgradePurchased += OnBlockLevelUpgradePurchased;
         _creationSpeedUpgrade.CreationSpeedUpgradePurchased += OnCreationSpeedUpgradePurchased;
         _moneyUpgrade.MoneyUpgradePurchased += OnMoneyUpgradePurchased;
@@ -90,12 +103,15 @@ public class ShopPresenter : MonoBehaviour
         _moneyUpgrade.MoneyUpgradeLevelChanged += OnMoneyUpgradeLevelChanged;
         _blockMoneyUpgrade.BlockMoneyUpgradeLevelChanged += OnBlockMoneyUpgradeLevelChanged;
 
-        _openShopButton.onClick.AddListener(() => _shopPanel.SetActive(true));
-        _closeShopButton.onClick.AddListener(() => _shopPanel.SetActive(false));
+        _closeShopButton.onClick.AddListener(() => _shopTouchBlockator.SetActive(false));
+        _openShopButton.onClick.AddListener(() => _shopTouchBlockator.SetActive(true));
+        _openShopButton.onClick.AddListener(() => _panelAnimator.LaunchIncreaseAnimation(_shopPanel));
     }
 
     private void OnDisable()
     {
+        _translatesContainer.TranslateSelected -= OnTranslateSelected;
+
         _blockLevelUpgrade.BlockLevelUpgradePurchased -= OnBlockLevelUpgradePurchased;
         _creationSpeedUpgrade.CreationSpeedUpgradePurchased -= OnCreationSpeedUpgradePurchased;
         _moneyUpgrade.MoneyUpgradePurchased -= OnMoneyUpgradePurchased;

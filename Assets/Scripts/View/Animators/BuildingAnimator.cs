@@ -1,5 +1,4 @@
 using DG.Tweening;
-using UnityEngine;
 using UnityEngine.Events;
 
 public class BuildingAnimator
@@ -14,10 +13,9 @@ public class BuildingAnimator
     private readonly float _decreasePushScale = 1f;
     private readonly float _decreaseScale = 0;
 
-    public void LaunchDecreaseBuildingAnimation(Building building, ParticleSystem confetti)
+    public void LaunchDecreaseBuildingAnimation(Building building)
     {
         _decreaseBuildingSequence = DOTween.Sequence();
-        //_decreaseBuildingSequence.InsertCallback(0, () => confetti.Play());
         _decreaseBuildingSequence.Append(building.transform.DOScale(_increasePushScale, _pushDelay));
         _decreaseBuildingSequence.Append(building.transform.DOScale(_decreasePushScale, _pushDelay));
         _decreaseBuildingSequence.Append(building.transform.DOScale(_decreaseScale, _decreaseDelay));

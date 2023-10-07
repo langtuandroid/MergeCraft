@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine.Events;
 
 public class Wallet
@@ -10,27 +11,35 @@ public class Wallet
     public event UnityAction<double> MoneyCountChanged;
     public event UnityAction<int> BuildBlocksMoneyChanged;
 
-    private double _money;
+    private double _money = 9999999999999999999;
     private int _buildBlocksMoney;
     private float _moneyMultiplier = 1;
     private float _moneyMultiplierBeforeAd;
     private int _additionalBlockMoney = 0;
+    private bool _adMoneyMultiplierActivated;
     private readonly float _moneyMultiplierIncreaseStep = 0.05f;
     private readonly int _blockMoneyIncreaseStep = 5;
     private const float _adMultiplierValue = 2;
 
-    public void RevertMoneyMultiplier() => _moneyMultiplier = _moneyMultiplierBeforeAd;
+    public void RevertMoneyMultiplier()
+    {
+        _moneyMultiplier = _moneyMultiplierBeforeAd;
+        _adMoneyMultiplierActivated = false;
+    }
 
     public void ActivateAdMoneyMultiplier()
     {
         _moneyMultiplierBeforeAd = _moneyMultiplier;
         _moneyMultiplier = _adMultiplierValue;
+        _adMoneyMultiplierActivated = true;
     }
 
     public void TryIncreaseMoneyMultiplier()
     {
-        if (_moneyMultiplier + _moneyMultiplierIncreaseStep <= float.MaxValue)
+        if (_moneyMultiplier + _moneyMultiplierIncreaseStep <= float.MaxValue && _adMoneyMultiplierActivated == false)
             _moneyMultiplier += _moneyMultiplierIncreaseStep;
+        else if (_moneyMultiplierBeforeAd + _moneyMultiplierIncreaseStep <= float.MaxValue && _adMoneyMultiplierActivated == true)
+            _moneyMultiplierBeforeAd += _moneyMultiplierIncreaseStep;
     }
 
     public void TryIncreaseAdditionalBlockMoney()

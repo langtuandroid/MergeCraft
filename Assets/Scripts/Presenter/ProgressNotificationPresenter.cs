@@ -4,14 +4,18 @@ using UnityEngine.UI;
 
 public class ProgressNotificationPresenter : MonoBehaviour
 {
+    [SerializeField] private TranslatesContainer _translatesContainer;
     [SerializeField] private LibraryBlockSwitcher _libraryBlockSwitcher;
     [SerializeField] private SoundPlayer _soundPlayer;
     [Space(10), SerializeField] private GameObject _notificationPanel;
+    [SerializeField] private GameObject _notificationTouchBlocker;
     [SerializeField] private Image _achievedBlockImage;
     [SerializeField] private TMP_Text _achievedBlockNameText;
+    [SerializeField] private TMP_Text _newBlockText;
     [SerializeField] private Button _closeNotificationButton;
     [Space(10), SerializeField] private Cell[] _cells;
 
+    private PanelAnimator _panelAnimator = new PanelAnimator();
     private int _achievedBlockLevel = 1;
 
     private void OnCellOccupied(MergeBlock mergeBlock)
@@ -24,10 +28,13 @@ public class ProgressNotificationPresenter : MonoBehaviour
 
     private void ShowNotification(int blockLevel)
     {
-        _achievedBlockImage.sprite = _libraryBlockSwitcher.GetBlockSprite(blockLevel - 1);
-        _achievedBlockNameText.text = _libraryBlockSwitcher.GetBlockName(blockLevel - 1);
+        _newBlockText.text = _translatesContainer.SelectedTranslate.NewBlockNotification;
 
-        _notificationPanel.gameObject.SetActive(true);
+        _achievedBlockImage.sprite = _libraryBlockSwitcher.GetBlockSprite(blockLevel - 1);
+        _achievedBlockNameText.text = _translatesContainer.SelectedTranslate.GetBlockName(blockLevel - 1);
+
+        _notificationTouchBlocker.SetActive(true);
+        _panelAnimator.LaunchIncreaseAnimation(_notificationPanel);
         _achievedBlockLevel = blockLevel;
     }
 
@@ -36,7 +43,7 @@ public class ProgressNotificationPresenter : MonoBehaviour
         foreach (var cell in _cells)
             cell.CellOccupied += OnCellOccupied;
 
-        _closeNotificationButton.onClick.AddListener(() => _notificationPanel.gameObject.SetActive(false));
+        _closeNotificationButton.onClick.AddListener(() => _notificationTouchBlocker.SetActive(false));
     }
 
     private void OnDisable()

@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 using YG;
 
 public class Volume : MonoBehaviour
 {
     [SerializeField] private AudioMixerGroup _mixer;
+    [SerializeField] private Slider _soundSlider;
+    [SerializeField] private Slider _musicSlider;
 
-    private float _volume;
     private const int MinVolumeValue = -80;
     private const int MaxVolumeValue = 0;
     private const string MusicVolume = "MusicVolume";
@@ -25,7 +27,10 @@ public class Volume : MonoBehaviour
     private void OnGetDataEvent()
     {
         //_volume = YandexGame.savesData.Volume;
-        _mixer.audioMixer.SetFloat(MasterVolume, _volume);
+        _mixer.audioMixer.SetFloat(MasterVolume, MaxVolumeValue);
+
+        _soundSlider.value = Mathf.Lerp(MinVolumeValue, MaxVolumeValue, MaxVolumeValue);
+        _musicSlider.value = Mathf.Lerp(MinVolumeValue, MaxVolumeValue, MaxVolumeValue);
     }
 
     //private void OnEnable() => YandexGame.GetDataEvent += OnGetDataEvent;

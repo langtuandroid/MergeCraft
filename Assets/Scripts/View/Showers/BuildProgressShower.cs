@@ -13,5 +13,5 @@ public class BuildProgressShower : MonoBehaviour
         _progressText.text = (buildedBlocks + " / " + allBlocks).ToString();
 
     public void ShowBuildingNumber(int createdBuildingNumber) => 
-        _buildingNumberText.text = ("LVL " + (createdBuildingNumber + 1)).ToString();
+        _buildingNumberText.text = (createdBuildingNumber + 1).ToString();
 }

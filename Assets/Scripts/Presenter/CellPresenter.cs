@@ -12,14 +12,14 @@ public class CellPresenter : MonoBehaviour, IDropHandler
 
         if (mergeBlock.CanCreateMergedBlock)
         {
-            if (_cell.BlockInCell != null)
+            if (_cell.BlockInCell != null && _cell.BlockInCell.CanCreateMergedBlock)
             {
                 MergeBlockAnimator mergeBlockAnimator = _cell.BlockInCell.MergeBlockAnimator;
 
                 if (mergeBlock.BlockLevel == _cell.BlockInCell.BlockLevel && mergeBlockAnimator.AnimationPlaying == false)
                     Occupie(mergeBlock);
             }
-            else
+            else if (_cell.BlockInCell == null) 
             {
                 Occupie(mergeBlock);
             }

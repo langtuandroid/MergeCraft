@@ -31,7 +31,7 @@ public class Building : MonoBehaviour
 
     public void TryBuildBlock()
     {
-        if (BlocksEnough && CanBuyBlock)
+        if (CanBuyBlock && BlocksEnough)
         {
             _wallet.TryReduceBuildBlocksMoney(_buildBlockPrice);
             int blockNumber = Random.Range(0, _remainingBlocks.Count);

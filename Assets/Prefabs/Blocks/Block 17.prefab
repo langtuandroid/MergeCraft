@@ -419,7 +419,6 @@ MonoBehaviour:
   _rewardShower: {fileID: 1689242866521972626}
   _rewardChest: {fileID: 4749621656435028088}
   _triggerCollider: {fileID: 4180801533623792715}
-  _chest: {fileID: 4749621656435028088}
   _mergedBlock: {fileID: 4180801533623792718, guid: b3f4ecde81554ad4bac5f52532b84ec4, type: 3}
   _blockLevel: 17
 --- !u!114 &3361582388383966406
@@ -836,9 +835,9 @@ MonoBehaviour:
   m_fontSize: 15
   m_fontSizeBase: 15
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 15
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256

@@ -2,7 +2,7 @@
 
 public class MergeBlock : MonoBehaviour
 {
-    public bool CanCreateMergedBlock => _mergedBlock != null;
+    public bool CanCreateMergedBlock => _mergedBlock != null && _rewardChest.RewardApplied;
     public bool MergeActivated => _mergeActivated;
     public int BlockLevel => _blockLevel;
     public MergeBlockAnimator MergeBlockAnimator => _mergeBlockAnimator;
@@ -38,9 +38,9 @@ public class MergeBlock : MonoBehaviour
             DeactivateMerge();
     }
 
-    public void TryCreateMergedBlock(GameObject touchedBlock)
+    public void TryCreateMergedBlock(MergeBlock touchedBlock)
     {
-        if (CanCreateMergedBlock)
+        if (CanCreateMergedBlock && touchedBlock.CanCreateMergedBlock)
         {
             MergeBlock mergedBlock = Instantiate(_mergedBlock, transform.position, Quaternion.identity);
 
@@ -50,7 +50,7 @@ public class MergeBlock : MonoBehaviour
             mergedBlock.RewardChest.Initialize(_rewardChest.Wallet);
             mergedBlock.MergeBlockAnimator.LaunchMergeBlockAnimation();
 
-            Destroy(touchedBlock);
+            Destroy(touchedBlock.gameObject);
             Destroy(gameObject);
         }
     }
