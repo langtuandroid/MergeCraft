@@ -6,6 +6,7 @@ public class ShopPresenter : MonoBehaviour
     [SerializeField] private TranslatesContainer _translatesContainer;
     [SerializeField] private BlockCreator _blockCreator;
     [SerializeField] private BlockReplacer _blockReplacer;
+    [SerializeField] private BuildingCreator _buildingCreator;
     [SerializeField] private Notifications _notifications;
     [SerializeField] private UpgradesInfoShower _upgradesPricesShower;
     [SerializeField] private UpgradesDescriptionShower _upgradesDescriptionShower;
@@ -56,6 +57,7 @@ public class ShopPresenter : MonoBehaviour
     {
         _blockCreator.TryIncreaseBlockLevel();
         _blockReplacer.TryReplaceBlocks(_blockCreator.CreationBlockLevel);
+        _buildingCreator.TryCreateBuilding();
     }
 
     private void OnTranslateSelected()

@@ -11,7 +11,7 @@ public class Wallet
     public event UnityAction<double> MoneyCountChanged;
     public event UnityAction<int> BuildBlocksMoneyChanged;
 
-    private double _money = 9999999999999999999;
+    private double _money;
     private int _buildBlocksMoney;
     private float _moneyMultiplier = 1;
     private float _moneyMultiplierBeforeAd;

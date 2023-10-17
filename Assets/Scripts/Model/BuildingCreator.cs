@@ -5,11 +5,14 @@ using UnityEngine.Events;
 public class BuildingCreator : MonoBehaviour, IActivatable
 {
     public event UnityAction<Building, int> BuildingCreated;
+    public event UnityAction BuildingLimitReached;
     public event UnityAction BuildingDestroyed;
 
-    [SerializeField] private int _firstBuildingReward;
     [SerializeField] private Canvas _buildCanvas;
+    [SerializeField] private BlockCreator _blockCreator;
     [Space(10), SerializeField] private Building[] _buildings;
+    [SerializeField] private double[] _buildingCreationRewards;
+    [SerializeField] private double[] _buildingBlockPrices;
 
     private List<Building> _bigBuildings = new List<Building>();
     private const int BigBuildingBlockCount = 400;
@@ -24,11 +27,19 @@ public class BuildingCreator : MonoBehaviour, IActivatable
     {
         if (_buildings.Length > 0)
         {
-            _createdBuilding = Instantiate(GetBuildingPrefab(GetBuildingNumber()), _buildCanvas.transform);
-            _createdBuilding.Intialize(_wallet, _firstBuildingReward * _createdBuildingNumber);
+            if (_createdBuildingNumber - 1 < _blockCreator.CreationBlockLevel + 1)
+            {
+                _createdBuilding = Instantiate(GetBuildingPrefab(GetBuildingNumber()), _buildCanvas.transform);
+                _createdBuilding.Intialize(_wallet, _buildingCreationRewards[_createdBuildingNumber - 1], 
+                    (int)_buildingBlockPrices[_createdBuildingNumber - 1] / _createdBuilding.BlocksCount);
 
-            BuildingCreated?.Invoke(_createdBuilding, _createdBuildingNumber - 1);
-            _createdBuildingNumber++;
+                BuildingCreated?.Invoke(_createdBuilding, _createdBuildingNumber - 1);
+                _createdBuildingNumber++;
+            }
+            else
+            {
+                BuildingLimitReached?.Invoke();
+            }
         }
     }
 

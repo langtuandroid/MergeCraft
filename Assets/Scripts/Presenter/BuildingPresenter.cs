@@ -7,10 +7,12 @@ public class BuildingPresenter : MonoBehaviour
     [SerializeField] private BuildingCreator _buildingCreator;
     [SerializeField] private BuildProgressShower _buildProgressShower;
     [SerializeField] private TranslatesContainer _translatesContainer;
+    [SerializeField] private GameObject _buildingLimitPanel;
     [SerializeField] private Image _buildingRewardImage;
     [SerializeField] private Button _buildBlockButton;
     [SerializeField] private Button _openBuildMenuButton;
     [SerializeField] private Button _closeBuildMenuButton;
+    [SerializeField] private Button _adBuildingRewardButton;
     [SerializeField] private Canvas _buildCanvas;
    
     private Building _createdBuilding;
@@ -26,6 +28,12 @@ public class BuildingPresenter : MonoBehaviour
 
     private void OnBlocksCountChanged(int buildedBlocks, int allBlocks) => 
         _buildProgressShower.ShowProgress(buildedBlocks, allBlocks);
+
+    private void OnBuildingLimitReached()
+    {
+        _buildingLimitPanel.gameObject.SetActive(true);
+        _adBuildingRewardButton.gameObject.SetActive(false);
+    }
 
     private void OnBuildingDecreased()
     {
@@ -60,12 +68,16 @@ public class BuildingPresenter : MonoBehaviour
 
         _buildBlockButton.onClick.AddListener(() => _createdBuilding.TryBuildBlock());
         _createdBuilding.CalculateBlocksCount();
+
+        _buildingLimitPanel.gameObject.SetActive(false);
+        _adBuildingRewardButton.gameObject.SetActive(true);
+
         _buildingBuilded = false;
     }
 
     private void TryActivateBuildButton()
     {
-        if (_buildingBuilded == false)
+        if (_buildingBuilded == false && _createdBuilding != null)
         {
             if (_createdBuilding.CanBuyBlock && _createdBuilding.BlocksEnough)
             {
@@ -86,6 +98,7 @@ public class BuildingPresenter : MonoBehaviour
         _buildingCreator.BuildingCreated += OnBuildingCreated;
         _buildingCreator.BuildingDestroyed += OnBuildingDestroyed;
         _buildingAnimator.BuildingDecreased += OnBuildingDecreased;
+        _buildingCreator.BuildingLimitReached += OnBuildingLimitReached;
 
         _openBuildMenuButton.onClick.AddListener(() => _buildCanvas.gameObject.SetActive(true));
         _closeBuildMenuButton.onClick.AddListener(() => _buildCanvas.gameObject.SetActive(false));
@@ -97,6 +110,7 @@ public class BuildingPresenter : MonoBehaviour
         _buildingCreator.BuildingCreated -= OnBuildingCreated;
         _buildingCreator.BuildingDestroyed -= OnBuildingDestroyed;
         _buildingAnimator.BuildingDecreased -= OnBuildingDecreased;
+        _buildingCreator.BuildingLimitReached -= OnBuildingLimitReached;
 
         _openBuildMenuButton.onClick.RemoveAllListeners();
         _closeBuildMenuButton.onClick.RemoveAllListeners();

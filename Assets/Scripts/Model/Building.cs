@@ -13,20 +13,21 @@ public class Building : MonoBehaviour
     public event UnityAction<BuildBlock> BlockActivated;
     public event UnityAction<int, int> BlocksCountChanged;
 
-    [SerializeField] private int _buildBlockPrice;
-    [Space(10), SerializeField] private List<BuildBlock> _blocks;
+    [SerializeField] private List<BuildBlock> _blocks;
 
     private List<BuildBlock> _buildedBlocks = new List<BuildBlock>();
     private List<BuildBlock> _remainingBlocks = new List<BuildBlock>();
     private Wallet _wallet;
-    private int _reward;
+    private double _reward;
+    private int _buildBlockPrice;
 
     public void ApplyBuildingReward() => _wallet.TryAddMoney(_reward);
 
-    public void Intialize(Wallet wallet, int reward)
+    public void Intialize(Wallet wallet, double reward, int buildBlockPrice)
     {
         _wallet = wallet;
         _reward = reward;
+        _buildBlockPrice = buildBlockPrice; 
     }
 
     public void TryBuildBlock()
