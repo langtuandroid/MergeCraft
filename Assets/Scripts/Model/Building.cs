@@ -27,7 +27,7 @@ public class Building : MonoBehaviour
     {
         _wallet = wallet;
         _reward = reward;
-        _buildBlockPrice = buildBlockPrice; 
+        _buildBlockPrice = buildBlockPrice;
     }
 
     public void TryBuildBlock()
@@ -35,15 +35,14 @@ public class Building : MonoBehaviour
         if (CanBuyBlock && BlocksEnough)
         {
             _wallet.TryReduceBuildBlocksMoney(_buildBlockPrice);
-            int blockNumber = Random.Range(0, _remainingBlocks.Count);
-
-            _remainingBlocks[blockNumber].gameObject.SetActive(true);
-            BlockActivated?.Invoke(_remainingBlocks[blockNumber]);
-
-            _buildedBlocks.Add(_remainingBlocks[blockNumber]);
-            _remainingBlocks.RemoveAt(blockNumber);
-            BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
+            BuildBlock();
         }
+    }
+
+    public void BuildAllBlocks()
+    {
+        while (BlocksEnough)
+            BuildBlock();
     }
 
     public void CalculateBlocksCount()
@@ -56,6 +55,18 @@ public class Building : MonoBehaviour
                 _remainingBlocks.Add(_blocks[i]);
         }
 
+        BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
+    }
+
+    private void BuildBlock()
+    {
+        int blockNumber = Random.Range(0, _remainingBlocks.Count);
+
+        _remainingBlocks[blockNumber].gameObject.SetActive(true);
+        BlockActivated?.Invoke(_remainingBlocks[blockNumber]);
+
+        _buildedBlocks.Add(_remainingBlocks[blockNumber]);
+        _remainingBlocks.RemoveAt(blockNumber);
         BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
     }
 }

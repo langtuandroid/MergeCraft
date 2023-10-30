@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class ShopPresenter : MonoBehaviour
 {
@@ -108,6 +109,9 @@ public class ShopPresenter : MonoBehaviour
         _closeShopButton.onClick.AddListener(() => _shopTouchBlockator.SetActive(false));
         _openShopButton.onClick.AddListener(() => _shopTouchBlockator.SetActive(true));
         _openShopButton.onClick.AddListener(() => _panelAnimator.LaunchIncreaseAnimation(_shopPanel));
+
+        _openShopButton.onClick.AddListener(() => YandexGame.FullscreenShow());
+        _closeShopButton.onClick.AddListener(() => YandexGame.FullscreenShow());
     }
 
     private void OnDisable()

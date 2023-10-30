@@ -8,21 +8,23 @@ public class AdvertisementPresenter : MonoBehaviour
     [SerializeField] private Timer _timer; 
     [SerializeField] private Volume _volume;
     [SerializeField] private TMP_Text _moneyRewardText;
+    [SerializeField] private BuildingCreator _buildingCreator;
     [SerializeField] private RemainingTimeShower _remainingTimeShower;
     [SerializeField] private Button _moneyRewardMultiplierButton;
-    [SerializeField] private Button _blockMoneyRewardButton;
+    [SerializeField] private Button _buildingRewardButton;
 
     private const int MultiplierRewardIndex = 0;
-    private const int BlockRewardCount = 200;
-    private const int BlockRewardIndex = 1;
+    private const int BuildingRewardIndex = 1;
+    private Building _createdBuilding;
     private Wallet _wallet;
 
     public void Initialize(Wallet wallet) => _wallet = wallet;
     private void OnOpenVideoEvent() => _volume.Mute();
     private void OnCloseVideoEvent() => _volume.Unmute();
-    private void OnBlockRewardButtonClicked() => YandexGame.RewVideoShow(BlockRewardIndex);
+    private void OnBuildingRewardButtonClicked() => YandexGame.RewVideoShow(BuildingRewardIndex);
     private void OnMultiplierButtonClicked() => YandexGame.RewVideoShow(MultiplierRewardIndex);
     private void OnTimerUpdated(float remainingTime) => _remainingTimeShower.Show(remainingTime);
+    private void OnBuildingCreated(Building createdBuilding) => _createdBuilding = createdBuilding;
 
     private void OnTimerFinished()
     {
@@ -40,9 +42,10 @@ public class AdvertisementPresenter : MonoBehaviour
             _remainingTimeShower.Activate();
             _timer.ActivateTimer();
         }
-        else if (rewardIndex == BlockRewardIndex)
+        else if (rewardIndex == BuildingRewardIndex)
         {
-            _wallet.TryAddBuildBlocksMoney(BlockRewardCount);
+            _buildingRewardButton.gameObject.SetActive(false);
+            _createdBuilding.BuildAllBlocks();
         }
     }
 
@@ -50,9 +53,10 @@ public class AdvertisementPresenter : MonoBehaviour
     {
         _timer.TimerUpdated += OnTimerUpdated;
         _timer.TimerFinished += OnTimerFinished;
+        _buildingCreator.BuildingCreated += OnBuildingCreated;
 
         _moneyRewardMultiplierButton.onClick.AddListener(() => OnMultiplierButtonClicked());
-        _blockMoneyRewardButton.onClick.AddListener(() => OnBlockRewardButtonClicked());
+        _buildingRewardButton.onClick.AddListener(() => OnBuildingRewardButtonClicked());
 
         YandexGame.RewardVideoEvent += OnRewardVideoEvent;
         YandexGame.OpenVideoEvent += OnOpenVideoEvent;
@@ -63,12 +67,15 @@ public class AdvertisementPresenter : MonoBehaviour
     {
         _timer.TimerUpdated -= OnTimerUpdated;
         _timer.TimerFinished -= OnTimerFinished;
+        _buildingCreator.BuildingCreated -= OnBuildingCreated;
 
         _moneyRewardMultiplierButton.onClick.RemoveAllListeners();
-        _blockMoneyRewardButton.onClick.RemoveAllListeners();
+        _buildingRewardButton.onClick.RemoveAllListeners();
 
         YandexGame.RewardVideoEvent -= OnRewardVideoEvent;
         YandexGame.OpenVideoEvent -= OnOpenVideoEvent;
         YandexGame.CloseVideoEvent -= OnCloseVideoEvent;
     }
+
+    private void Start() => YandexGame.FullscreenShow();
 }

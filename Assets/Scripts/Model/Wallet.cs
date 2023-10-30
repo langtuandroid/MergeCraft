@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine.Events;
 
 public class Wallet

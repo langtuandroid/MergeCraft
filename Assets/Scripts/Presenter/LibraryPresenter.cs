@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class LibraryPresenter : MonoBehaviour
 {
@@ -30,6 +31,9 @@ public class LibraryPresenter : MonoBehaviour
         _openLibraryButton.onClick.AddListener(() => _libraryBlockSwitcher.SwitchToFirstBlock());
         _openLibraryButton.onClick.AddListener(() => _panelAnimator.LaunchIncreaseAnimation(_libraryPanel));
         _closeLibraryButton.onClick.AddListener(() => _libraryTouchBlocker.gameObject.SetActive(false));
+
+        _openLibraryButton.onClick.AddListener(() => YandexGame.FullscreenShow());
+        _closeLibraryButton.onClick.AddListener(() => YandexGame.FullscreenShow());
     }
 
     private void OnDisable()

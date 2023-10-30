@@ -8255,9 +8255,10 @@ MonoBehaviour:
   _timer: {fileID: 2633848005705390342}
   _volume: {fileID: 3353220988679258944}
   _moneyRewardText: {fileID: 2360009655602686965}
+  _buildingCreator: {fileID: 3670117751749265910}
   _remainingTimeShower: {fileID: 1969097184709506780}
   _moneyRewardMultiplierButton: {fileID: 3066921267740474059}
-  _blockMoneyRewardButton: {fileID: 7411427770931102934}
+  _buildingRewardButton: {fileID: 7411427770931102934}
 --- !u!114 &1969097184709506780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8468,7 +8469,7 @@ GameObject:
   - component: {fileID: 7411427770931102934}
   - component: {fileID: 8429704677980108427}
   m_Layer: 5
-  m_Name: BlockMoneyRewardButton
+  m_Name: BuildingAdRewardButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16100,15 +16101,16 @@ MonoBehaviour:
   _blockCreator: {fileID: 7097899831391348040}
   _buildings:
   - {fileID: 6355720607494557553, guid: 0c56bd20eb46ccb46842253bd81e4c41, type: 3}
-  - {fileID: 2566640503165988277, guid: 20196cb13f525cc4397e07b5d756a5d8, type: 3}
+  - {fileID: 2566640503165988277, guid: 340750c874062a3468dcc82bdef7a707, type: 3}
   - {fileID: 2566640503165988277, guid: 9f0e6773d1217c14ab384768166e25a8, type: 3}
+  - {fileID: 2566640503165988277, guid: 10247edb4afa4f14da766b21820641db, type: 3}
+  - {fileID: 6355720607494557553, guid: a2135f42ebce747479b924ead5030561, type: 3}
   - {fileID: 2566640503165988277, guid: 3d1ccf2c25a7e91469dd6ceb521bed5d, type: 3}
+  - {fileID: 2566640503165988277, guid: 20196cb13f525cc4397e07b5d756a5d8, type: 3}
+  - {fileID: 2566640503165988277, guid: 3522495853756da4b997b7bf7d82eb37, type: 3}
+  - {fileID: 2566640503165988277, guid: b4177991cf9391847a6c40179a0d69e4, type: 3}
   - {fileID: 2566640503165988277, guid: 5021c55bc85e3fb4b986f000001648ff, type: 3}
-  - {fileID: 2566640503165988277, guid: b4ed63f3822ff1c449d0302bb60c5cba, type: 3}
-  - {fileID: 2566640503165988277, guid: 550d2254c41a8214e82d5a6deeae67cf, type: 3}
-  - {fileID: 2566640503165988277, guid: 480cd1296783a154ca2df4a4f7739190, type: 3}
   - {fileID: 2566640503165988277, guid: 5174c03b70245bc439e7a7be0716e926, type: 3}
-  - {fileID: 2566640503165988277, guid: afc20ed2c32a5b5448b8c8a916750c35, type: 3}
   - {fileID: 2566640503165988277, guid: 7921653ee65cfaa44b4997e39734c128, type: 3}
   _buildingCreationRewards:
   - 3500
@@ -16161,7 +16163,7 @@ MonoBehaviour:
   - 20000000000000000
   - 20000000000000000
   _buildingBlockPrices:
-  - 415
+  - 622
   - 1460
   - 2970
   - 4113
