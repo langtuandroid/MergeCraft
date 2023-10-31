@@ -1,4 +1,5 @@
 using UnityEngine.Events;
+using YG;
 
 public class Wallet
 {
@@ -20,6 +21,8 @@ public class Wallet
     private readonly int _blockMoneyIncreaseStep = 5;
     private const float _adMultiplierValue = 2;
 
+    public void AddSavesDataListener() => YandexGame.GetDataEvent += OnGetDataEvent;
+
     public void RevertMoneyMultiplier()
     {
         _moneyMultiplier = _moneyMultiplierBeforeAd;
@@ -36,15 +39,27 @@ public class Wallet
     public void TryIncreaseMoneyMultiplier()
     {
         if (_moneyMultiplier + _moneyMultiplierIncreaseStep <= float.MaxValue && _adMoneyMultiplierActivated == false)
+        {
             _moneyMultiplier += _moneyMultiplierIncreaseStep;
+
+            YandexGame.savesData.MoneyMultiplier = _moneyMultiplier;
+            YandexGame.SaveProgress();
+        }
         else if (_moneyMultiplierBeforeAd + _moneyMultiplierIncreaseStep <= float.MaxValue && _adMoneyMultiplierActivated == true)
+        {
             _moneyMultiplierBeforeAd += _moneyMultiplierIncreaseStep;
+        }
     }
 
     public void TryIncreaseAdditionalBlockMoney()
     {
         if (_additionalBlockMoney + _blockMoneyIncreaseStep <= int.MaxValue)
+        {
             _additionalBlockMoney += _blockMoneyIncreaseStep;
+
+            YandexGame.savesData.AdditionalBlockMoney = _additionalBlockMoney;
+            YandexGame.SaveProgress();
+        }
     }
 
     public void TryAddMoney(double money)
@@ -81,5 +96,20 @@ public class Wallet
             _buildBlocksMoney -= buildBlockMoney;
             BuildBlocksMoneyChanged?.Invoke(_buildBlocksMoney);
         }
+    }
+
+    private void OnGetDataEvent()
+    {
+        SavesYG savesData = YandexGame.savesData;
+
+        _money = savesData.Money;
+        _moneyMultiplier = savesData.MoneyMultiplier;
+        _buildBlocksMoney = savesData.BuildBlocksMoney;
+        _additionalBlockMoney = savesData.AdditionalBlockMoney;
+
+        MoneyCountChanged?.Invoke(_money);
+        BuildBlocksMoneyChanged?.Invoke(_buildBlocksMoney);
+
+        YandexGame.GetDataEvent -= OnGetDataEvent;
     }
 }

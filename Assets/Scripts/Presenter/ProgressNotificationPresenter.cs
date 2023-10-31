@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class ProgressNotificationPresenter : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class ProgressNotificationPresenter : MonoBehaviour
             cell.CellOccupied += OnCellOccupied;
 
         _closeNotificationButton.onClick.AddListener(() => _notificationTouchBlocker.SetActive(false));
+        _closeNotificationButton.onClick.AddListener(() => YandexGame.FullscreenShow());
     }
 
     private void OnDisable()

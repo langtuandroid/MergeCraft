@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class SettingsPresenter : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class SettingsPresenter : MonoBehaviour
         _closeButton.onClick.AddListener(() => _settingsTouchBlockator.gameObject.SetActive(false));
         _openButton.onClick.AddListener(() => _settingsTouchBlockator.gameObject.SetActive(true));
         _openButton.onClick.AddListener(() => _panelAnimator.LaunchIncreaseAnimation(_settingsPanel));
+
+        _openButton.onClick.AddListener(() => YandexGame.FullscreenShow());
+        _closeButton.onClick.AddListener(() => YandexGame.FullscreenShow());
     }
 
     private void OnDisable()

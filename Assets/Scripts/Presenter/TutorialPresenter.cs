@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class TutorialPresenter : MonoBehaviour
 {
@@ -24,12 +25,18 @@ public class TutorialPresenter : MonoBehaviour
     {
         _buildTutorialPanel.SetActive(false);
         _buildTutorialFinished = true;
+
+        YandexGame.savesData.BuildTutorialFinished = _buildTutorialFinished;
+        YandexGame.SaveProgress();
     }
 
     private void FinishMainTutorial()
     {
         _mainTutorialPanel.SetActive(false);
         _mainTutorialFinished = true;
+
+        YandexGame.savesData.MainTutorialFinished = _mainTutorialFinished;
+        YandexGame.SaveProgress();
     }
 
     private void TryActivateTutorial(GameObject tutorialPanel, bool tutorialFinished)
@@ -38,8 +45,19 @@ public class TutorialPresenter : MonoBehaviour
             tutorialPanel.SetActive(true);
     }
 
+    private void OnGetDataEvent()
+    {
+        SavesYG savesData = YandexGame.savesData;
+
+        _buildTutorialFinished = savesData.BuildTutorialFinished;
+        _mainTutorialFinished = savesData.MainTutorialFinished;
+
+        TryActivateMainTutorial();
+    }
+
     private void OnEnable()
     {
+        YandexGame.GetDataEvent += OnGetDataEvent;
         _translatesContainer.TranslateSelected += OnTranslateSelected;
 
         _openBuildButton.onClick.AddListener(() => TryActivateBuildTutorial());
@@ -49,6 +67,7 @@ public class TutorialPresenter : MonoBehaviour
 
     private void OnDisable()
     {
+        YandexGame.GetDataEvent -= OnGetDataEvent;
         _translatesContainer.TranslateSelected -= OnTranslateSelected;
 
         _openBuildButton.onClick.RemoveAllListeners();

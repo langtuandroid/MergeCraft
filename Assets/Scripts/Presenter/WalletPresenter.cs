@@ -1,4 +1,5 @@
 using UnityEngine;
+using YG;
 
 public class WalletPresenter : MonoBehaviour
 {
@@ -16,12 +17,20 @@ public class WalletPresenter : MonoBehaviour
 
     private void OnMoneyCountChanged(double money)
     {
+        YandexGame.savesData.Money = money;
+        YandexGame.SaveProgress();
+
         _walletContentShower.ShowMoneyCount(money);
         _soundPlayer.PlayMoneySound();
     }
 
-    private void OnBuildBlocksMoneyChanged(int buildBlocksMoney) => 
+    private void OnBuildBlocksMoneyChanged(int buildBlocksMoney)
+    {
         _walletContentShower.ShowBuildBlockMoneyCount(buildBlocksMoney);
+        YandexGame.savesData.BuildBlocksMoney = buildBlocksMoney;
+        YandexGame.SaveProgress();
+    }
+
 
     private void OnDisable()
     {

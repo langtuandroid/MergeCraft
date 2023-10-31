@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using YG;
 
 public class BuildingCreator : MonoBehaviour, IActivatable
 {
@@ -34,7 +35,12 @@ public class BuildingCreator : MonoBehaviour, IActivatable
                 BuildingCreated?.Invoke(_createdBuilding);
                 BuildingNumberChanged?.Invoke(_createdBuildingNumber - 1);
 
+                YandexGame.savesData.CreatedBuildingNumber = _createdBuildingNumber;
+                YandexGame.savesData.CreatedBuilding = _createdBuilding;
+                YandexGame.SaveProgress();
+
                 _createdBuildingNumber++;
+
             }
             else
             {
@@ -64,4 +70,27 @@ public class BuildingCreator : MonoBehaviour, IActivatable
 
         return buildingNumber;
     }
+
+    private void OnGetDataEvent()
+    {
+        SavesYG savesData = YandexGame.savesData;
+        _createdBuildingNumber = savesData.CreatedBuildingNumber;
+
+        if (savesData.CreatedBuilding != null)
+        {
+            if (_createdBuildingNumber - 1 < _blockCreator.CreationBlockLevel + 1)
+            {
+                _createdBuilding = savesData.CreatedBuilding;
+                BuildingCreated?.Invoke(_createdBuilding);
+                BuildingNumberChanged?.Invoke(_createdBuildingNumber - 1);
+            }
+            else
+            {
+                BuildingLimitReached?.Invoke();
+            }
+        }
+    }
+
+    private void OnEnable() => YandexGame.GetDataEvent += OnGetDataEvent;
+    private void OnDisable() => YandexGame.GetDataEvent -= OnGetDataEvent;
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using YG;
 
 public class BlockCreator : MonoBehaviour, IActivatable
 {
@@ -26,13 +27,23 @@ public class BlockCreator : MonoBehaviour, IActivatable
     public void TryDecreaseCreationDuration()
     {
         if (_creationDuration - _durationDecreaseStep >= 0)
+        {
             _creationDuration -= _durationDecreaseStep;
+
+            YandexGame.savesData.CreationDuration = _creationDuration;
+            YandexGame.SaveProgress();
+        }
     }
 
     public void TryIncreaseBlockLevel()
     {
         if (_creationBlockLevel + 1 < _blocks.Length)
+        {
             _creationBlockLevel++;
+
+            YandexGame.savesData.CreationBlockLevel = _creationBlockLevel;
+            YandexGame.SaveProgress();
+        }
     }
 
     public void TryCreateAllBlocks()
@@ -75,6 +86,9 @@ public class BlockCreator : MonoBehaviour, IActivatable
 
         block.RewardChest.Initialize(_wallet);
         block.MergeBlockAnimator.LaunchCreateBlockAnimation(_creationDuration);
+
+        YandexGame.savesData.Cells = _cells;
+        YandexGame.SaveProgress();
     }
 
     private void InitializeEmptyCells()
@@ -95,6 +109,31 @@ public class BlockCreator : MonoBehaviour, IActivatable
         }
     }
 
+    private void OnGetDataEvent()
+    {
+        SavesYG savesData = YandexGame.savesData;
+
+        _creationBlockLevel = savesData.CreationBlockLevel;
+        _creationDuration = savesData.CreationDuration;
+
+        if (savesData.Cells != null && savesData.Cells.Length > 0)
+        {
+            for (int i = 0; i < _cells.Length; i++)
+            {
+                if (_cells[i].BlockInCell != null)
+                    Destroy(_cells[i].BlockInCell);
+            }
+
+            for (int i = 0; i < savesData.Cells.Length; i++)
+            {
+                if (savesData.Cells[i] != null)
+                    _cells[i].Occupie(savesData.Cells[i].BlockInCell);
+            }
+        }
+    }
+
     private void Awake() => _passedTime = _creationDuration;
+    private void OnEnable() => YandexGame.GetDataEvent += OnGetDataEvent;
+    private void OnDisable() => YandexGame.GetDataEvent += OnGetDataEvent;
 }
 

@@ -38,10 +38,6 @@ public class ShopPresenter : MonoBehaviour
         _blockMoneyUpgrade.Initialize(_wallet);
     }
 
-    private void OnCreationSpeedUpgradePurchased() => _blockCreator.TryDecreaseCreationDuration();
-    private void OnMoneyUpgradePurchased() => _wallet.TryIncreaseMoneyMultiplier();
-    private void OnBlockMoneyUpgradePurchased() => _wallet.TryIncreaseAdditionalBlockMoney();
-
     private void OnBlockUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
         _upgradesPricesShower.ShowBlockLevelInfo(upgradePrice, upgradeLevel);
 
@@ -54,17 +50,45 @@ public class ShopPresenter : MonoBehaviour
     private void OnBlockMoneyUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
         _upgradesPricesShower.ShowBlockMoneyMultiplierInfo(upgradePrice, upgradeLevel);
 
+    private void OnCreationSpeedUpgradePurchased()
+    {
+        _blockCreator.TryDecreaseCreationDuration();
+        SaveShop();
+    }
+
+    private void OnMoneyUpgradePurchased()
+    {
+        _wallet.TryIncreaseMoneyMultiplier();
+        SaveShop();
+    }
+
+    private void OnBlockMoneyUpgradePurchased()
+    {
+        _wallet.TryIncreaseAdditionalBlockMoney();
+        SaveShop();
+    }
+
     private void OnBlockLevelUpgradePurchased()
     {
         _blockCreator.TryIncreaseBlockLevel();
         _blockReplacer.TryReplaceBlocks(_blockCreator.CreationBlockLevel);
         _buildingCreator.TryCreateBuilding();
+        SaveShop();
     }
 
     private void OnTranslateSelected()
     {
         _upgradesDescriptionShower.Show(_translatesContainer.SelectedTranslate);
         _openShopButton.interactable = true;
+    }
+
+    private void SaveShop()
+    {
+        YandexGame.savesData.MoneyUpgrade = _moneyUpgrade;
+        YandexGame.savesData.BlockLevelUpgrade = _blockLevelUpgrade;
+        YandexGame.savesData.BlockMoneyUpgrade = _blockMoneyUpgrade;
+        YandexGame.savesData.CreationSpeedUpgrade = _creationSpeedUpgrade;
+        YandexGame.SaveProgress();
     }
 
     private void TryActivateBuyButton(Upgrade upgrade)
@@ -77,6 +101,19 @@ public class ShopPresenter : MonoBehaviour
         else
         {
             upgrade.BuyUpgradeButton.interactable = false;
+        }
+    }
+
+    private void OnGetDataEvent()
+    {
+        SavesYG savesData = YandexGame.savesData;
+
+        if (savesData.MoneyUpgrade != null)
+        {
+            _moneyUpgrade = savesData.MoneyUpgrade;
+            _blockLevelUpgrade = savesData.BlockLevelUpgrade;
+            _blockMoneyUpgrade = savesData.BlockMoneyUpgrade;
+            _creationSpeedUpgrade = savesData.CreationSpeedUpgrade;
         }
     }
 
@@ -93,6 +130,8 @@ public class ShopPresenter : MonoBehaviour
 
     private void OnEnable()
     {
+        YandexGame.GetDataEvent += OnGetDataEvent;
+
         _openShopButton.interactable = false;
         _translatesContainer.TranslateSelected += OnTranslateSelected;
 
@@ -116,6 +155,7 @@ public class ShopPresenter : MonoBehaviour
 
     private void OnDisable()
     {
+        YandexGame.GetDataEvent -= OnGetDataEvent;
         _translatesContainer.TranslateSelected -= OnTranslateSelected;
 
         _blockLevelUpgrade.BlockLevelUpgradePurchased -= OnBlockLevelUpgradePurchased;
