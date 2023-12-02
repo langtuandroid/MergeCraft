@@ -5,9 +5,9 @@ public class Hud : MonoBehaviour
 {
     public event UnityAction HudInitialized;
 
+    [SerializeField] private Shop _shop;
     [SerializeField] private BlockCreator _blockCreator;
     [SerializeField] private BlockReplacer _blockReplacer;
-    [SerializeField] private ShopPresenter _shopPresenter;
     [SerializeField] private MoneyGenerator _moneyGenerator;
     [SerializeField] private WalletPresenter _walletPresenter;
     [SerializeField] private BuildingCreator _buildingCreator;
@@ -15,7 +15,7 @@ public class Hud : MonoBehaviour
 
     public void Initialize(Wallet wallet)
     {
-        _shopPresenter.Initialize(wallet);
+        _shop.Initialize(wallet);
         _blockCreator.Initialize(wallet);
         _blockReplacer.Initialize(wallet);
         _moneyGenerator.Initialize(wallet);

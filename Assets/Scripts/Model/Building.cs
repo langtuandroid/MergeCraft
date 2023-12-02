@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using YG;
 
 public class Building : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Building : MonoBehaviour
 
     private List<BuildBlock> _buildedBlocks = new List<BuildBlock>();
     private List<BuildBlock> _remainingBlocks = new List<BuildBlock>();
+    private List<bool> _buildingBlocksActivity = new List<bool>();
     private Wallet _wallet;
     private double _reward;
     private int _buildBlockPrice;
@@ -45,17 +47,34 @@ public class Building : MonoBehaviour
             BuildBlock();
     }
 
-    public void CalculateBlocksCount()
+    public void TryRestoreBuildedBlocks()
+    {
+        SavesYG savesData = YandexGame.savesData;
+
+        if (savesData.BuildingBlocksActivity != null && savesData.BuildingBlocksActivity.Count > 0)
+        {
+            for (int i = 0; i < _blocks.Count; i++)
+            {
+                if (savesData.BuildingBlocksActivity[i] == true)
+                    _blocks[i].gameObject.SetActive(true);
+            }
+        }
+
+        CalculateBlocksCount();
+    }
+
+    private void CalculateBlocksCount()
     {
         for (int i = 0; i < _blocks.Count; i++)
         {
-            if (_blocks[i].gameObject.activeInHierarchy == true)
+            if (_blocks[i].gameObject.activeSelf == true)
                 _buildedBlocks.Add(_blocks[i]);
             else
                 _remainingBlocks.Add(_blocks[i]);
         }
 
         BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
+        SaveBuildedBlocksActivity();
     }
 
     private void BuildBlock()
@@ -68,5 +87,17 @@ public class Building : MonoBehaviour
         _buildedBlocks.Add(_remainingBlocks[blockNumber]);
         _remainingBlocks.RemoveAt(blockNumber);
         BlocksCountChanged?.Invoke(_buildedBlocks.Count, _blocks.Count);
+        SaveBuildedBlocksActivity();
+    }
+
+    private void SaveBuildedBlocksActivity()
+    {
+        _buildingBlocksActivity.Clear();
+
+        for (int i = 0; i < _blocks.Count; i++)
+            _buildingBlocksActivity.Add(_blocks[i].gameObject.activeSelf);
+
+        YandexGame.savesData.BuildingBlocksActivity = _buildingBlocksActivity;
+        YandexGame.SaveProgress();
     }
 }

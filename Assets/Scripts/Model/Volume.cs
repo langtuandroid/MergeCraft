@@ -9,31 +9,40 @@ public class Volume : MonoBehaviour
     [SerializeField] private Slider _soundSlider;
     [SerializeField] private Slider _musicSlider;
 
-    private float _soundVolume = 0;
-    private float _musicVolume = 0;
-    private const int MinVolumeValue = -80;
-    private const int MaxVolumeValue = 0;
+    private bool _saveDataLoaded;
+    private float _soundVolume = 0.75f;
+    private float _musicVolume = 0.75f;
+    private const float MinSliderValue = 0;
+    private const float MaxSliderValue = 1;
+    private const float MinMixerVolumeValue = -80;
+    private const float MaxMixerVolumeValue = 0;
     private const string MusicVolume = "MusicVolume";
     private const string SoundVolume = "SoundVolume";
     private const string MasterVolume = "MasterVolume";
 
-    public void Mute() => _mixer.audioMixer.SetFloat(MasterVolume, MinVolumeValue);
-    public void Unmute() => _mixer.audioMixer.SetFloat(MasterVolume, MaxVolumeValue);
+    public void Mute() => _mixer.audioMixer.SetFloat(MasterVolume, MinMixerVolumeValue);
+    public void Unmute() => _mixer.audioMixer.SetFloat(MasterVolume, MaxMixerVolumeValue);
 
-    public void ChangeMusicVolume(float volume)
+    public void TryChangeMusicVolume(float volume)
     {
-        _mixer.audioMixer.SetFloat(MusicVolume, Mathf.Lerp(MinVolumeValue, MaxVolumeValue, volume));
+        if (_saveDataLoaded)
+        {
+            _mixer.audioMixer.SetFloat(MusicVolume, Mathf.Lerp(MinMixerVolumeValue, MaxMixerVolumeValue, volume));
 
-        YandexGame.savesData.MusicVolume = volume;
-        YandexGame.SaveProgress();
+            YandexGame.savesData.MusicVolume = volume;
+            //YandexGame.SaveProgress();
+        }
     }
 
-    public void ChangeSoundVolume(float volume)
+    public void TryChangeSoundVolume(float volume)
     {
-        _mixer.audioMixer.SetFloat(SoundVolume, Mathf.Lerp(MinVolumeValue, MaxVolumeValue, volume));
+        if (_saveDataLoaded)
+        {
+            _mixer.audioMixer.SetFloat(SoundVolume, Mathf.Lerp(MinMixerVolumeValue, MaxMixerVolumeValue, volume));
 
-        YandexGame.savesData.SoundVolume = volume;
-        YandexGame.SaveProgress();
+            YandexGame.savesData.SoundVolume = volume;
+            //YandexGame.SaveProgress();
+        }
     }
 
     private void OnGetDataEvent()
@@ -43,8 +52,13 @@ public class Volume : MonoBehaviour
         _soundVolume = savesData.SoundVolume;
         _musicVolume = savesData.MusicVolume;
 
-        _soundSlider.value = Mathf.Lerp(MinVolumeValue, MaxVolumeValue, _soundVolume);
-        _musicSlider.value = Mathf.Lerp(MinVolumeValue, MaxVolumeValue, _musicVolume);
+        _mixer.audioMixer.SetFloat(SoundVolume, Mathf.Lerp(MinMixerVolumeValue, MaxMixerVolumeValue, _soundVolume));
+        _mixer.audioMixer.SetFloat(MusicVolume, Mathf.Lerp(MinMixerVolumeValue, MaxMixerVolumeValue, _musicVolume));
+
+        _soundSlider.value = Mathf.Lerp(MinSliderValue, MaxSliderValue, _soundVolume);
+        _musicSlider.value = Mathf.Lerp(MinSliderValue, MaxSliderValue, _musicVolume);
+
+        _saveDataLoaded = true;
     }
 
     private void OnEnable() => YandexGame.GetDataEvent += OnGetDataEvent;

@@ -768,8 +768,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b529c119009613f4daf3f07f1b7a48e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reward: 40000
-  _buildBlockPrice: 15
   _blocks:
   - {fileID: 1987967629220482329}
   - {fileID: 1070487668880910025}

@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace YG
 {
     [System.Serializable]
@@ -10,27 +12,31 @@ namespace YG
         public string language = "ru";
         public bool promptDone;
 
+        public int AchievedBlockLevel;
+
         public double Money = 0;
         public int BuildBlocksMoney = 0;
         public float MoneyMultiplier = 1;
         public int AdditionalBlockMoney = 0;
 
-        public float SoundVolume = 0;
-        public float MusicVolume = 0;
+        public float SoundVolume = 0.75f;
+        public float MusicVolume = 0.75f;
 
-        public Cell[] Cells;
+        public List<int> BlocksInCells;
         public float CreationDuration = 3;
         public int CreationBlockLevel = 0;
 
-        public BlockLevelUpgrade BlockLevelUpgrade;
-        public CreationSpeedUpgrade CreationSpeedUpgrade;
-        public BlockMoneyUpgrade BlockMoneyUpgrade;
-        public MoneyUpgrade MoneyUpgrade;
+        public int BlockUpgradeLevel = 1;
+        public int CreationSpeedUpgradeLevel = 1;
+        public int BlockMoneyUpgradeLevel = 1;
+        public int MoneyUpgradeLevel = 1;
 
-        public int CreatedBuildingNumber = 1;
-        public Building CreatedBuilding;
+        public List<bool> BuildingBlocksActivity;
+        public int CreatedBuildingNumber;
+        public int DestroyedBuildingsCount;
+        public int CreatedBuildingPrefabNumber;
 
-        public bool BuildTutorialFinished;
-        public bool MainTutorialFinished;
+        public bool BuildTutorialFinished = false;
+        public bool MainTutorialFinished = false;
     }
 }

@@ -9,17 +9,23 @@ public class BlockDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, I
     [SerializeField] private float _positionResetDuration;
 
     private RectTransform _rectTransform;
-    private Image _blockImage;
     private MergeBlock _mergeBlock;
+    private Camera _mainCamera;
+    private Image _blockImage;
+    private Vector3 _offset;
 
     public void ActivateDrag() => _blockImage.raycastTarget = true;
     public void DeactivateDrag() => _blockImage.raycastTarget = false;
 
-    public void OnDrag(PointerEventData eventData) => 
-        _rectTransform.anchoredPosition += eventData.delta / _rectTransform.parent.transform.localScale.x;
+    public void OnDrag(PointerEventData eventData)
+    {
+        Vector3 newPosition = _mainCamera.ScreenToWorldPoint(eventData.position);
+        _rectTransform.position = newPosition + _offset;
+    } 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        _offset = _rectTransform.position - _mainCamera.ScreenToWorldPoint(eventData.position);
         _rectTransform.parent.SetAsLastSibling();
         _blockImage.raycastTarget = false;
         _mergeBlock.DeactivateMerge();
@@ -36,6 +42,7 @@ public class BlockDragger : MonoBehaviour, IBeginDragHandler, IEndDragHandler, I
         _rectTransform = GetComponent<RectTransform>();
         _blockImage = GetComponent<Image>();
         _mergeBlock = GetComponent<MergeBlock>();
+        _mainCamera = Camera.main;
     }
 
     private void OnDestroy() => DOTween.Kill(_rectTransform);

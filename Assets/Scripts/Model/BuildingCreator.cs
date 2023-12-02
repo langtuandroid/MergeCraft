@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using YG;
 
-public class BuildingCreator : MonoBehaviour, IActivatable
+public class BuildingCreator : MonoBehaviour
 {
-    public event UnityAction<Building> BuildingCreated;
+    public event UnityAction<int> RecoveredBuildingLimitReached;
     public event UnityAction<int> BuildingNumberChanged;
+    public event UnityAction<Building> BuildingCreated;
     public event UnityAction BuildingLimitReached;
     public event UnityAction BuildingDestroyed;
 
@@ -15,32 +16,39 @@ public class BuildingCreator : MonoBehaviour, IActivatable
     [SerializeField] private double[] _buildingCreationRewards;
     [SerializeField] private double[] _buildingBlockPrices;
 
+    private const int RecoveredNumberOffset = 2;
     private int _createdBuildingNumber = 1;
-    private Building _createdBuilding;
+    private int _destroyedBuildingsCount = 0;
+    private Building _createdBuilding = null;
     private Wallet _wallet;
 
-    public void Activate() => TryCreateBuilding();
     public void Initialize(Wallet wallet) => _wallet = wallet;
+
+    public void TryRecoverBuilding()
+    {
+        SavesYG savesData = YandexGame.savesData;
+
+        if (savesData.CreatedBuildingNumber > 0)
+            RecoverBuilding(savesData);
+        else
+            TryCreateBuilding(); 
+    }
 
     public void TryCreateBuilding()
     {
         if (_buildings.Length > 0 && _createdBuilding == null)
         {
-            if (_createdBuildingNumber - 1 < _blockCreator.CreationBlockLevel + 1)
+            if (_destroyedBuildingsCount < _blockCreator.CreationBlockLevel + 1)
             {
-                _createdBuilding = Instantiate(_buildings[GetBuildingNumber()], _buildCanvas.transform);
-                _createdBuilding.Intialize(_wallet, _buildingCreationRewards[_createdBuildingNumber - 1],
-                    (int)(_buildingBlockPrices[_createdBuildingNumber - 1] + _wallet.BuildBlocksMoney) / _createdBuilding.BlocksCount);
+                int buildingPrefabNumber = GetBuildingPrefabNumber();
+                CreateBuilding(buildingPrefabNumber);
 
-                BuildingCreated?.Invoke(_createdBuilding);
                 BuildingNumberChanged?.Invoke(_createdBuildingNumber - 1);
-
-                YandexGame.savesData.CreatedBuildingNumber = _createdBuildingNumber;
-                YandexGame.savesData.CreatedBuilding = _createdBuilding;
-                YandexGame.SaveProgress();
-
                 _createdBuildingNumber++;
 
+                YandexGame.savesData.CreatedBuildingNumber = _createdBuildingNumber;
+                YandexGame.savesData.CreatedBuildingPrefabNumber = buildingPrefabNumber;
+                YandexGame.SaveProgress();
             }
             else
             {
@@ -55,42 +63,55 @@ public class BuildingCreator : MonoBehaviour, IActivatable
         {
             Destroy(_createdBuilding.gameObject);
             _createdBuilding = null;
+            _destroyedBuildingsCount++;
+
+            YandexGame.savesData.BuildingBlocksActivity = null;
+            YandexGame.savesData.DestroyedBuildingsCount = _destroyedBuildingsCount;
+            YandexGame.SaveProgress();
+
             BuildingDestroyed?.Invoke();
         }
     }
 
-    private int GetBuildingNumber()
+    private int GetBuildingPrefabNumber()
     {
         int buildingNumber;
 
-        if (_createdBuildingNumber - 1 < _buildings.Length)
-            buildingNumber = _createdBuildingNumber - 1;
+        if (_destroyedBuildingsCount < _buildings.Length)
+            buildingNumber = _destroyedBuildingsCount;
         else
             buildingNumber = Random.Range(0, _buildings.Length);
 
         return buildingNumber;
     }
 
-    private void OnGetDataEvent()
+    private void RecoverBuilding(SavesYG savesData)
     {
-        SavesYG savesData = YandexGame.savesData;
         _createdBuildingNumber = savesData.CreatedBuildingNumber;
+        _destroyedBuildingsCount = savesData.DestroyedBuildingsCount;
+        BuildingNumberChanged?.Invoke(_createdBuildingNumber - RecoveredNumberOffset);
 
-        if (savesData.CreatedBuilding != null)
+        Debug.Log("_destroyedBuildingsCount " + _destroyedBuildingsCount);
+        Debug.Log("_blockCreator.CreationBlockLevel " + (_blockCreator.CreationBlockLevel + 1));
+
+        if (_destroyedBuildingsCount < _blockCreator.CreationBlockLevel + 1)
         {
-            if (_createdBuildingNumber - 1 < _blockCreator.CreationBlockLevel + 1)
-            {
-                _createdBuilding = savesData.CreatedBuilding;
-                BuildingCreated?.Invoke(_createdBuilding);
-                BuildingNumberChanged?.Invoke(_createdBuildingNumber - 1);
-            }
-            else
-            {
-                BuildingLimitReached?.Invoke();
-            }
+            CreateBuilding(savesData.CreatedBuildingPrefabNumber);
+            Debug.Log("Пересоздал");
+        }    
+        else
+        {
+            RecoveredBuildingLimitReached?.Invoke(_buildings[savesData.CreatedBuildingPrefabNumber].BlocksCount);
+            Debug.Log("Не Пересоздал из-за лимита");
         }
     }
 
-    private void OnEnable() => YandexGame.GetDataEvent += OnGetDataEvent;
-    private void OnDisable() => YandexGame.GetDataEvent -= OnGetDataEvent;
+    private void CreateBuilding(int buildingPrefabNumber)
+    {
+        _createdBuilding = Instantiate(_buildings[buildingPrefabNumber], _buildCanvas.transform);
+        _createdBuilding.Intialize(_wallet, _buildingCreationRewards[_destroyedBuildingsCount],
+            (int)(_buildingBlockPrices[_destroyedBuildingsCount] + _wallet.BuildBlocksMoney) / _createdBuilding.BlocksCount);
+
+        BuildingCreated?.Invoke(_createdBuilding);
+    }
 }

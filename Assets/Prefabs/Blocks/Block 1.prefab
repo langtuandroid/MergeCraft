@@ -463,6 +463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _positionResetDuration: 0.1
+  _cellCanvas: {fileID: 0}
 --- !u!114 &2805170868801420928
 MonoBehaviour:
   m_ObjectHideFlags: 0

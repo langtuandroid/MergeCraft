@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using YG;
 
-public class BlockCreator : MonoBehaviour, IActivatable
+public class BlockCreator : MonoBehaviour
 {
     public event UnityAction<float> CreationProgressChanged;
     public bool CreatorActivated => _creatorActivated;
@@ -13,6 +13,7 @@ public class BlockCreator : MonoBehaviour, IActivatable
     [SerializeField] private MergeBlock[] _blocks;
 
     private List<Cell> _emptyCells = new List<Cell>();
+    private List<int> _blocksInCells = new List<int>();
     private Wallet _wallet;
     private float _passedTime;
     private bool _canCreate;
@@ -22,7 +23,6 @@ public class BlockCreator : MonoBehaviour, IActivatable
     private float _durationDecreaseStep = 0.1f;
 
     public void Initialize(Wallet wallet) => _wallet = wallet;
-    public void Activate() => _creatorActivated = true;
 
     public void TryDecreaseCreationDuration()
     {
@@ -46,13 +46,30 @@ public class BlockCreator : MonoBehaviour, IActivatable
         }
     }
 
-    public void TryCreateAllBlocks()
+    public void TryRecoverBlocks()
     {
-        for (int i = 0; i < _cells.Length; i++)
+        SavesYG savesData = YandexGame.savesData;
+
+        _creationBlockLevel = savesData.CreationBlockLevel;
+        _creationDuration = savesData.CreationDuration;
+
+        if (savesData.BlocksInCells != null && savesData.BlocksInCells.Count > 0)
         {
-            _emptyCells.Clear();
-            InitializeEmptyCells();
-            CreateBlock();
+            for (int i = 0; i < savesData.BlocksInCells.Count; i++)
+            {
+                MergeBlock blockInCell = Instantiate(_blocks[savesData.BlocksInCells[i]], _cells[i].transform.position, Quaternion.identity);
+                _cells[i].Occupie(blockInCell);
+
+                blockInCell.RewardChest.Initialize(_wallet);
+                blockInCell.MergeBlockAnimator.LaunchCreateBlockAnimation(_creationDuration);
+            }
+
+            _creatorActivated = true;
+        }
+        else
+        {
+            CreateAllBlocks();
+            _creatorActivated = true;
         }
     }
 
@@ -86,18 +103,30 @@ public class BlockCreator : MonoBehaviour, IActivatable
 
         block.RewardChest.Initialize(_wallet);
         block.MergeBlockAnimator.LaunchCreateBlockAnimation(_creationDuration);
-
-        YandexGame.savesData.Cells = _cells;
-        YandexGame.SaveProgress();
+        InitializeBlocksInCells();
     }
 
     private void InitializeEmptyCells()
     {
         for (int i = 0; i < _cells.Length; i++)
         {
-            if (_cells[i].Blocked == false && _cells[i].BlockInCell == null && _emptyCells.Contains(_cells[i]) == false)
+            if (_cells[i].BlockInCell == null && _emptyCells.Contains(_cells[i]) == false)
                 _emptyCells.Add(_cells[i]);
         }
+    }
+
+    private void InitializeBlocksInCells()
+    {
+        _blocksInCells.Clear();
+
+        for (int i = 0; i < _cells.Length; i++)
+        {
+            if (_cells[i].BlockInCell != null)
+                _blocksInCells.Add(_cells[i].BlockInCell.BlockLevel - 1);
+        }
+
+        YandexGame.savesData.BlocksInCells = _blocksInCells;
+        YandexGame.SaveProgress();
     }
 
     private void TryResetPassedTime()
@@ -109,31 +138,16 @@ public class BlockCreator : MonoBehaviour, IActivatable
         }
     }
 
-    private void OnGetDataEvent()
+    private void CreateAllBlocks()
     {
-        SavesYG savesData = YandexGame.savesData;
-
-        _creationBlockLevel = savesData.CreationBlockLevel;
-        _creationDuration = savesData.CreationDuration;
-
-        if (savesData.Cells != null && savesData.Cells.Length > 0)
+        for (int i = 0; i < _cells.Length; i++)
         {
-            for (int i = 0; i < _cells.Length; i++)
-            {
-                if (_cells[i].BlockInCell != null)
-                    Destroy(_cells[i].BlockInCell);
-            }
-
-            for (int i = 0; i < savesData.Cells.Length; i++)
-            {
-                if (savesData.Cells[i] != null)
-                    _cells[i].Occupie(savesData.Cells[i].BlockInCell);
-            }
+            _emptyCells.Clear();
+            InitializeEmptyCells();
+            CreateBlock();
         }
     }
 
     private void Awake() => _passedTime = _creationDuration;
-    private void OnEnable() => YandexGame.GetDataEvent += OnGetDataEvent;
-    private void OnDisable() => YandexGame.GetDataEvent += OnGetDataEvent;
 }
 

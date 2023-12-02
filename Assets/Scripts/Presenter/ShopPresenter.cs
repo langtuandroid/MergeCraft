@@ -15,28 +15,13 @@ public class ShopPresenter : MonoBehaviour
     [SerializeField] private Button _openShopButton;
     [SerializeField] private GameObject _shopPanel;
     [SerializeField] private GameObject _shopTouchBlockator;
-    [Space(10), SerializeField] private BlockLevelUpgrade _blockLevelUpgrade;
-    [SerializeField] private CreationSpeedUpgrade _creationSpeedUpgrade;
-    [SerializeField] private BlockMoneyUpgrade _blockMoneyUpgrade;
-    [SerializeField] private MoneyUpgrade _moneyUpgrade;
+    [SerializeField] private Shop _shop;
 
     private PanelAnimator _panelAnimator = new PanelAnimator();
-    private Wallet _wallet;
 
-    private bool BlockUpgradesButtonsDisabled =>
-        _blockLevelUpgrade.CanBuyUpgrade == false && _creationSpeedUpgrade.CanBuyUpgrade == false;
-
-    private bool MoneyUpgradesButtonsDisabled =>
-        _blockMoneyUpgrade.CanBuyUpgrade == false && _moneyUpgrade.CanBuyUpgrade == false;
-
-    public void Initialize(Wallet wallet)
-    {
-        _wallet = wallet;
-        _moneyUpgrade.Initialize(_wallet);
-        _blockLevelUpgrade.Initialize(_wallet);
-        _creationSpeedUpgrade.Initialize(_wallet);
-        _blockMoneyUpgrade.Initialize(_wallet);
-    }
+    private void OnCreationSpeedUpgradePurchased() => _blockCreator.TryDecreaseCreationDuration();
+    private void OnMoneyUpgradePurchased() => _shop.Wallet.TryIncreaseMoneyMultiplier();
+    private void OnBlockMoneyUpgradePurchased() => _shop.Wallet.TryIncreaseAdditionalBlockMoney();
 
     private void OnBlockUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
         _upgradesPricesShower.ShowBlockLevelInfo(upgradePrice, upgradeLevel);
@@ -50,30 +35,11 @@ public class ShopPresenter : MonoBehaviour
     private void OnBlockMoneyUpgradeLevelChanged(double upgradePrice, int upgradeLevel) => 
         _upgradesPricesShower.ShowBlockMoneyMultiplierInfo(upgradePrice, upgradeLevel);
 
-    private void OnCreationSpeedUpgradePurchased()
-    {
-        _blockCreator.TryDecreaseCreationDuration();
-        SaveShop();
-    }
-
-    private void OnMoneyUpgradePurchased()
-    {
-        _wallet.TryIncreaseMoneyMultiplier();
-        SaveShop();
-    }
-
-    private void OnBlockMoneyUpgradePurchased()
-    {
-        _wallet.TryIncreaseAdditionalBlockMoney();
-        SaveShop();
-    }
-
     private void OnBlockLevelUpgradePurchased()
     {
         _blockCreator.TryIncreaseBlockLevel();
         _blockReplacer.TryReplaceBlocks(_blockCreator.CreationBlockLevel);
         _buildingCreator.TryCreateBuilding();
-        SaveShop();
     }
 
     private void OnTranslateSelected()
@@ -82,68 +48,20 @@ public class ShopPresenter : MonoBehaviour
         _openShopButton.interactable = true;
     }
 
-    private void SaveShop()
-    {
-        YandexGame.savesData.MoneyUpgrade = _moneyUpgrade;
-        YandexGame.savesData.BlockLevelUpgrade = _blockLevelUpgrade;
-        YandexGame.savesData.BlockMoneyUpgrade = _blockMoneyUpgrade;
-        YandexGame.savesData.CreationSpeedUpgrade = _creationSpeedUpgrade;
-        YandexGame.SaveProgress();
-    }
-
-    private void TryActivateBuyButton(Upgrade upgrade)
-    {
-        if (upgrade.CanBuyUpgrade)
-        {
-            upgrade.BuyUpgradeButton.interactable = true;
-            _notifications.ActivateShopNotification();
-        }
-        else
-        {
-            upgrade.BuyUpgradeButton.interactable = false;
-        }
-    }
-
-    private void OnGetDataEvent()
-    {
-        SavesYG savesData = YandexGame.savesData;
-
-        if (savesData.MoneyUpgrade != null)
-        {
-            _moneyUpgrade = savesData.MoneyUpgrade;
-            _blockLevelUpgrade = savesData.BlockLevelUpgrade;
-            _blockMoneyUpgrade = savesData.BlockMoneyUpgrade;
-            _creationSpeedUpgrade = savesData.CreationSpeedUpgrade;
-        }
-    }
-
-    private void Update()
-    {
-        TryActivateBuyButton(_blockLevelUpgrade);
-        TryActivateBuyButton(_creationSpeedUpgrade);
-        TryActivateBuyButton(_moneyUpgrade);
-        TryActivateBuyButton(_blockMoneyUpgrade);
-
-        if (BlockUpgradesButtonsDisabled && MoneyUpgradesButtonsDisabled)
-            _notifications.DeactivateShopNotification();
-    }
-
     private void OnEnable()
     {
-        YandexGame.GetDataEvent += OnGetDataEvent;
-
         _openShopButton.interactable = false;
         _translatesContainer.TranslateSelected += OnTranslateSelected;
 
-        _blockLevelUpgrade.BlockLevelUpgradePurchased += OnBlockLevelUpgradePurchased;
-        _creationSpeedUpgrade.CreationSpeedUpgradePurchased += OnCreationSpeedUpgradePurchased;
-        _moneyUpgrade.MoneyUpgradePurchased += OnMoneyUpgradePurchased;
-        _blockMoneyUpgrade.BlockMoneyUpgradePurchased += OnBlockMoneyUpgradePurchased;
+        _shop.BlockLevelUpgrade.BlockLevelUpgradePurchased += OnBlockLevelUpgradePurchased;
+        _shop.CreationSpeedUpgrade.CreationSpeedUpgradePurchased += OnCreationSpeedUpgradePurchased;
+        _shop.MoneyUpgrade.MoneyUpgradePurchased += OnMoneyUpgradePurchased;
+        _shop.BlockMoneyUpgrade.BlockMoneyUpgradePurchased += OnBlockMoneyUpgradePurchased;
 
-        _blockLevelUpgrade.BlockUpgradeLevelChanged += OnBlockUpgradeLevelChanged;
-        _creationSpeedUpgrade.CreationSpeedUpgradeLevelChanged += OnCreationSpeedUpgradeLevelChanged;
-        _moneyUpgrade.MoneyUpgradeLevelChanged += OnMoneyUpgradeLevelChanged;
-        _blockMoneyUpgrade.BlockMoneyUpgradeLevelChanged += OnBlockMoneyUpgradeLevelChanged;
+        _shop.BlockLevelUpgrade.BlockUpgradeLevelChanged += OnBlockUpgradeLevelChanged;
+        _shop.CreationSpeedUpgrade.CreationSpeedUpgradeLevelChanged += OnCreationSpeedUpgradeLevelChanged;
+        _shop.MoneyUpgrade.MoneyUpgradeLevelChanged += OnMoneyUpgradeLevelChanged;
+        _shop.BlockMoneyUpgrade.BlockMoneyUpgradeLevelChanged += OnBlockMoneyUpgradeLevelChanged;
 
         _closeShopButton.onClick.AddListener(() => _shopTouchBlockator.SetActive(false));
         _openShopButton.onClick.AddListener(() => _shopTouchBlockator.SetActive(true));
@@ -155,25 +73,26 @@ public class ShopPresenter : MonoBehaviour
 
     private void OnDisable()
     {
-        YandexGame.GetDataEvent -= OnGetDataEvent;
         _translatesContainer.TranslateSelected -= OnTranslateSelected;
 
-        _blockLevelUpgrade.BlockLevelUpgradePurchased -= OnBlockLevelUpgradePurchased;
-        _creationSpeedUpgrade.CreationSpeedUpgradePurchased -= OnCreationSpeedUpgradePurchased;
-        _moneyUpgrade.MoneyUpgradePurchased -= OnMoneyUpgradePurchased;
-        _blockMoneyUpgrade.BlockMoneyUpgradePurchased -= OnBlockMoneyUpgradePurchased;
+        _shop.BlockLevelUpgrade.BlockLevelUpgradePurchased -= OnBlockLevelUpgradePurchased;
+        _shop.CreationSpeedUpgrade.CreationSpeedUpgradePurchased -= OnCreationSpeedUpgradePurchased;
+        _shop.MoneyUpgrade.MoneyUpgradePurchased -= OnMoneyUpgradePurchased;
+        _shop.BlockMoneyUpgrade.BlockMoneyUpgradePurchased -= OnBlockMoneyUpgradePurchased;
 
-        _blockLevelUpgrade.BlockUpgradeLevelChanged -= OnBlockUpgradeLevelChanged;
-        _creationSpeedUpgrade.CreationSpeedUpgradeLevelChanged -= OnCreationSpeedUpgradeLevelChanged;
-        _moneyUpgrade.MoneyUpgradeLevelChanged -= OnMoneyUpgradeLevelChanged;
-        _blockMoneyUpgrade.BlockMoneyUpgradeLevelChanged -= OnBlockMoneyUpgradeLevelChanged;
+        _shop.BlockLevelUpgrade.BlockUpgradeLevelChanged -= OnBlockUpgradeLevelChanged;
+        _shop.CreationSpeedUpgrade.CreationSpeedUpgradeLevelChanged -= OnCreationSpeedUpgradeLevelChanged;
+        _shop.MoneyUpgrade.MoneyUpgradeLevelChanged -= OnMoneyUpgradeLevelChanged;
+        _shop.BlockMoneyUpgrade.BlockMoneyUpgradeLevelChanged -= OnBlockMoneyUpgradeLevelChanged;
 
-        _blockLevelUpgrade.RemoveBuyButtonListeners();
-        _creationSpeedUpgrade.RemoveBuyButtonListeners();
-        _moneyUpgrade.RemoveBuyButtonListeners();
-        _blockMoneyUpgrade.RemoveBuyButtonListeners();
+        _shop.BlockLevelUpgrade.RemoveBuyButtonListeners();
+        _shop.CreationSpeedUpgrade.RemoveBuyButtonListeners();
+        _shop.MoneyUpgrade.RemoveBuyButtonListeners();
+        _shop.BlockMoneyUpgrade.RemoveBuyButtonListeners();
 
         _openShopButton.onClick.RemoveAllListeners();
         _closeShopButton.onClick.RemoveAllListeners();
     }
+
+    private void Update() => _shop.TryActivateBuyButtons();
 }

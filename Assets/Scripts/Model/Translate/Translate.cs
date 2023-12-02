@@ -5,6 +5,8 @@ public abstract class Translate
     public string MusicName => _musicName;
     public string SoundName => _soundName;
     public string ContinueWord => _continueWord;
+    public string BuildRewardDescription => _buildRewardDescription;
+    public string BuildLimitDescription => _buildLimitDescription;
     public string NewBlockNotification => _newBlockNotification;
     public string BlockLevelUpgradeName => _blockLevelUpgradeName;
     public string CreationSpeedUpgradeName => _creationSpeedUpgradeName;
@@ -20,6 +22,8 @@ public abstract class Translate
     [SerializeField] private string _soundName;
     [Space(5), SerializeField] private string _musicName;
     [Space(5), SerializeField] private string _continueWord;
+    [Space(5), SerializeField] private string _buildRewardDescription;
+    [Space(5), SerializeField] private string _buildLimitDescription;
     [Space(5), SerializeField] private string _newBlockNotification;
     [Space(5), SerializeField] private string _blockLevelUpgradeName;
     [Space(5), SerializeField] private string _creationSpeedUpgradeName;

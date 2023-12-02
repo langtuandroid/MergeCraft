@@ -10,6 +10,7 @@ public class Wallet
 
     public event UnityAction<double> MoneyCountChanged;
     public event UnityAction<int> BuildBlocksMoneyChanged;
+    public event UnityAction<double, int> AllMoneyCountRecovered;
 
     private double _money;
     private int _buildBlocksMoney;
@@ -107,9 +108,7 @@ public class Wallet
         _buildBlocksMoney = savesData.BuildBlocksMoney;
         _additionalBlockMoney = savesData.AdditionalBlockMoney;
 
-        MoneyCountChanged?.Invoke(_money);
-        BuildBlocksMoneyChanged?.Invoke(_buildBlocksMoney);
-
+        AllMoneyCountRecovered?.Invoke(_money, _buildBlocksMoney);
         YandexGame.GetDataEvent -= OnGetDataEvent;
     }
 }

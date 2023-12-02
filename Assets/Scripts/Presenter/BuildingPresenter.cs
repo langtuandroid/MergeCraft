@@ -38,10 +38,20 @@ public class BuildingPresenter : MonoBehaviour
         _buildingCreator.TryDestroyCreatedBuilding();
     }
 
+    private void OnRecoveredBuildingLimitReached(int previouslyBuildingBlocksCount)
+    {
+        _buildProgressShower.ShowProgress(previouslyBuildingBlocksCount, previouslyBuildingBlocksCount);
+        _adBuildingRewardButton.gameObject.SetActive(false);
+        _buildingLimitPanel.gameObject.SetActive(true);
+        _buildBlockButton.interactable = false;
+    }
+
     private void OnBlockBuilded()
     {
         if (AllBlocksBuilded && _buildingAnimator.DecreaseAnimationLaunched == false)
         {
+            _adBuildingRewardButton.gameObject.SetActive(false);
+
             _buildingBuilded = true;
             _buildBlockButton.interactable = false;
             _buildBlockButton.onClick.RemoveAllListeners();
@@ -63,7 +73,7 @@ public class BuildingPresenter : MonoBehaviour
         _createdBuilding.BlocksCountChanged += OnBlocksCountChanged;
 
         _buildBlockButton.onClick.AddListener(() => _createdBuilding.TryBuildBlock());
-        _createdBuilding.CalculateBlocksCount();
+        _createdBuilding.TryRestoreBuildedBlocks();
 
         _buildingLimitPanel.gameObject.SetActive(false);
         _adBuildingRewardButton.gameObject.SetActive(true);
@@ -96,6 +106,7 @@ public class BuildingPresenter : MonoBehaviour
         _buildingAnimator.BuildingDecreased += OnBuildingDecreased;
         _buildingCreator.BuildingLimitReached += OnBuildingLimitReached;
         _buildingCreator.BuildingNumberChanged += OnBuildingNumberChanged;
+        _buildingCreator.RecoveredBuildingLimitReached += OnRecoveredBuildingLimitReached;
 
         _openBuildMenuButton.onClick.AddListener(() => _buildCanvas.gameObject.SetActive(true));
         _closeBuildMenuButton.onClick.AddListener(() => _buildCanvas.gameObject.SetActive(false));
@@ -112,6 +123,7 @@ public class BuildingPresenter : MonoBehaviour
         _buildingAnimator.BuildingDecreased -= OnBuildingDecreased;
         _buildingCreator.BuildingLimitReached -= OnBuildingLimitReached;
         _buildingCreator.BuildingNumberChanged -= OnBuildingNumberChanged;
+        _buildingCreator.RecoveredBuildingLimitReached -= OnRecoveredBuildingLimitReached;
 
         _openBuildMenuButton.onClick.RemoveAllListeners();
         _closeBuildMenuButton.onClick.RemoveAllListeners();

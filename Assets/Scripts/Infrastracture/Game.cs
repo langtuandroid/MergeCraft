@@ -7,9 +7,7 @@ public class Game
     public Game(AssetProvider assetProvider)
     {
         UIFactory UIfactory = new UIFactory(assetProvider.HudPrefab);
-
         Wallet wallet = new Wallet();
-        wallet.AddSavesDataListener();
 
         _gameStateMachine = new GameStateMachine(UIfactory, wallet);
     }

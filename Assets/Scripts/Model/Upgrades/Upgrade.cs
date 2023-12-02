@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public abstract class Upgrade
 {
+    public bool WalletInitialized => _wallet != null;
     public Button BuyUpgradeButton => _buyUpgradeButton;
     public bool CanBuyUpgrade => _wallet.Money >= _upgradePrice && _upgradeLevel < _maxUpgradeLevel;
 
@@ -17,6 +18,19 @@ public abstract class Upgrade
 
     public void RemoveBuyButtonListeners() =>
         _buyUpgradeButton.onClick.RemoveAllListeners();
+
+    public void TryRecoverUpgrade()
+    {
+        int restoredLevel = GetRestoredLevel();
+
+        if (restoredLevel > _upgradeLevel)
+        {
+            _upgradeLevel = restoredLevel;
+            _upgradePrice = _prices[restoredLevel - 1];
+            InvokeLevelChangeEvent(_upgradePrice, _upgradeLevel);
+            TryDeactivateUpgradeButton();
+        }
+    }
 
     public void Initialize(Wallet wallet)
     {
@@ -40,6 +54,7 @@ public abstract class Upgrade
             InvokeBuyEvent();
             InvokeLevelChangeEvent(_upgradePrice, _upgradeLevel);
             TryDeactivateUpgradeButton();
+            SaveUpgradeLevel(_upgradeLevel);
         }
     }
 
@@ -53,5 +68,7 @@ public abstract class Upgrade
     }
 
     protected abstract void InvokeBuyEvent();
+    protected abstract int GetRestoredLevel();
+    protected abstract void SaveUpgradeLevel(int level);
     protected abstract void InvokeLevelChangeEvent(double upgradePrice, int upgradeLevel);
 }
